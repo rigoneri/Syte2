@@ -1,0 +1,33 @@
+<div class="modal">
+  <div class="modal-background" ng-click="close()"></div>
+  <div class="modal-overlay">
+    <div class="content">
+      <div class="media">
+        <img ng-if="item.pictureHD" ng-src="{{ item.pictureHD }}" />
+      </div>
+      <div class="details">
+        <a href="{{ item.url }}" class="user-info" ng-if="item.user" target="_blank">
+          <span class="picture">
+            <img ng-src="{{ item.user.picture }}" />
+          </span>
+          <h4 class="multiline"><strong>{{ item.title }}</strong> by {{ item.user.username }}</h4>
+        </a>
+        <h3 ng-if="!item.user">{{ item.title }}</h3>
+        <span am-time-ago="item.date" class="date"></span>
+        <div class="stats">
+          <a href="{{ item.url }}" ng-if="item.views" target="_blank">
+           <span class="small-icon views"></span><span class="val">{{ item.views }}</span>
+         </a>
+         <a href="{{ item.url }}" ng-if="item.likes" target="_blank">
+           <span class="small-icon heart"></span><span class="val">{{ item.likes }}</span>
+         </a>
+         <a href="{{ item.url }}" ng-if="item.comments" target="_blank">
+           <span class="small-icon comment"></span><span class="val">{{ item.comments }}</span>
+         </a>
+        </div>
+        <div ng-bind-html="item.text"></div>
+      </div>
+    </div>
+  </div>
+  <button class="close-btn" ng-click="close()"></button>
+</div>

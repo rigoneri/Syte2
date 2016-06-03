@@ -1,0 +1,30 @@
+<div class="twitter-page" id="twitter-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <div ng-if="user.banner" class="banner" src="images/placeholder.png" lazy-img="{{ user.banner }}"></div>
+    <div class="over-shadow"></div>
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
+    </a>
+    <h2>{{ user.name }}</h2>
+    <a href="{{ user.url }}" class="username" target="_blank">@{{ user.username }}</a>
+    <p ng-if="user.description" ng-bind-html="user.description"></p>
+    <ul class="stats">
+      <li ng-if="user.statuses">Tweets <strong>{{ user.statuses }}</strong></li>
+      <li ng-if="user.following">Following <strong>{{ user.following }}</strong></li>
+      <li ng-if="user.followers">Followers <strong>{{ user.followers }}</strong></li>
+    </ul>
+    <h3 ng-if="user.pictures">Recent Photos</h3>
+    <div class="photos" ng-if="user.pictures">
+      <div ng-repeat="picture in user.pictures | limitTo:4" class="photo" lazy-img="{{picture.url}}" ng-click="openPicture(picture)"></div>
+    </div>
+  </div>
+  <div class="tweets">
+    <h2>Recent Tweets</h2>
+    <ul>
+      <li ng-repeat="item in tweets" class="tweet">
+        <twitter-post item="item"></twitter-post>
+      <li>
+    </li>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

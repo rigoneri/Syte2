@@ -1,0 +1,57 @@
+<div class="lastfm-page" id="lastfm-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
+    </a>
+    <h2>{{ user.name }}</h2>
+    <span ng-if="user.username" class="username">{{ user.username }}</span>
+    <h3>Recent Tracks</h3>
+    <ul class="tracks">
+      <li ng-repeat="item in items" class="track">
+        <div class="track-image">
+          <img src="images/placeholder.png" ng-if="item.image" lazy-img="{{ item.image }}" />
+          <span class="icon music" ng-if="!item.image"></span>
+        </div>
+        <div class="track-info">
+          <div><a href="{{ item.url }}" target="_blank">{{ item.title }}</a><span ng-if="item.artist"> - {{ item.artist }}</span></div>
+          <div am-time-ago="item.date" class="date"></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="top-stats">
+    <h2 ng-if="topArtists">Top Artists</h2>
+    <ul ng-if="topArtists" class="top">
+      <li ng-repeat="artist in topArtists" ng-click="openTop(artist)">
+        <div class="image" lazy-img="{{ artist.image }}"></div>
+        <div class="info">
+          <a href="{{ artist.url }}" target="_blank">{{ artist.name }}</a>
+          <div class="plays">{{ artist.count }} plays</div>
+        </div>
+      </li>
+    </ul>
+    <h2 ng-if="topAlbums">Top Albums</h2>
+    <ul ng-if="topAlbums" class="top">
+      <li ng-repeat="album in topAlbums" ng-click="openTop(album)">
+        <div class="image" lazy-img="{{ album.image }}"></div>
+        <div class="info">
+          <a href="{{ album.url }}" target="_blank">{{ album.name }}</a>
+          <div ng-if="album.artist" class="artist">{{ album.artist }}</div>
+          <div class="plays">{{ album.count }} plays</div>
+        </div>
+      </li>
+    </ul>
+    <h2 ng-if="topTracks">Top Tracks</h2>
+    <ul ng-if="topTracks" class="top">
+      <li ng-repeat="track in topTracks" ng-click="openTop(track)">
+        <div class="image" lazy-img="{{ track.image }}"></div>
+        <div class="info">
+          <a href="{{ track.url }}" target="_blank">{{ track.name }}</a>
+          <div ng-if="track.artist" class="artist">{{ track.artist }}</div>
+          <div class="plays">{{ track.count }} plays</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

@@ -1,0 +1,38 @@
+<div class="github-page" id="github-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
+    </a>
+    <h2>{{ user.name }}</h2>
+    <a href="{{ user.url }}" class="username" target="_blank">{{ user.username }}</a>
+    <ul class="stats">
+      <li ng-if="user.repos">Repos <strong>{{ user.repos }}</strong></li>
+      <li ng-if="user.following">Following <strong>{{ user.following }}</strong></li>
+      <li ng-if="user.followers">Followers <strong>{{ user.followers }}</strong></li>
+    </ul>
+    <h3>Repositories</h3>
+    <ul class="repos">
+      <li ng-repeat="repo in repos" class="repo">
+        <a href="{{ repo.url }}" target="_blank">{{ repo.name }}</a>
+        <p>{{ repo.description }}</p>
+        <ul class="repo-stats">
+          <li ng-if="repo.language">{{ repo.language }}</li>
+          <li><span class="small-icon star"></span><span class="val">{{ repo.favorites }}</span></li>
+          <li><span class="small-icon git-branch"></span><span class="val">{{ repo.forks }}</span></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="activities">
+    <h2>Recent Activity</h2>
+    <ul>
+      <li ng-repeat="activity in activities" class="activity">
+        <span class="icon {{ activity.icon}}"></span>
+        <p ng-bind-html="activity.description" class="description"></p>
+        <div ng-if="activity.comment" class="comment" ng-bind-html="activity.comment"></div>
+        <span am-time-ago="activity.date" class="date"></span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

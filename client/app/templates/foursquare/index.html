@@ -1,0 +1,58 @@
+<div class="foursquare-page" id="foursquare-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
+    </a>
+    <h2>{{ user.name }}</h2>
+    <span ng-if="user.location" class="location">{{ user.location }}</span>
+    <p ng-if="user.bio" ng-bind-html="user.bio"></p>
+    <ul class="stats">
+      <li ng-if="user.checkins">Check-ins <strong>{{ user.checkins }}</strong></li>
+      <li ng-if="user.friends">Friends <strong>{{ user.friends }}</strong></li>
+    </ul>
+    <h3>Recent Check-ins</h3>
+    <ul class="checkins">
+      <li ng-repeat="item in items" class="checkin">
+        <div class="checkin-icon">
+          <img src="images/placeholder.png" ng-if="item.icon" lazy-img="{{ item.icon }}"/>
+        </div>
+        <div class="info">
+          <div><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
+          <div>
+           <span ng-if="item.event">{{ item.event }} - </span>
+           <span ng-if="!item.event && item.category">{{ item.category }} - </span>
+           <span class="alt">{{ item.city }}, {{item.state}}</span>
+          </div>
+          <div am-time-ago="item.date" class="date"></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="checkin-stats" ng-class="{'animate-hide': animateHide, 'animate-between': animateBetween, 'animate-show': animateShow}">
+    <div class="map-title">
+      <h2 class="title" ng-if="monthTitleDate">{{ monthTitleDate }}</h2>
+      <span class="total-count">{{ totalCheckins }} Check-ins</span>
+      <span class="icon left" ng-click="previousMonth()"></span>
+      <span class="icon right" ng-click="nextMonth()" ng-if="mapPage > 0"></span>
+    </div>
+    <div class="foursquare-map">
+      <div id="foursquare-map" class="map"></div>
+      <div class="markers">
+        <div ng-repeat="item in mapData" ng-style="{'top': item.y + 'px', 'left': item.x + 'px'}" class="marker">
+          <div class="circle"></div>
+          <div class="text">{{ item.title}}</div>
+        </div>
+      </div>
+    </div>
+    <ul class="foursquare-categories">
+      <li ng-repeat="category in mapCategories | limitTo:8">
+        <div class="category-icon">
+          <img src="images/placeholder.png" ng-if="category.icon" lazy-img="{{ category.icon }}"/>
+        </div>
+        <div class="category-title">{{category.title}}</div>
+        <div class="category-count">{{category.count}} <span ng-if="category.count == 1">time</span><span ng-if="category.count > 1">times</span></div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

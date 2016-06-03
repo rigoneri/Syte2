@@ -1,0 +1,15 @@
+<h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
+<span class="small-icon foursquare"></span>
+<div class="content">
+  <div class="checkin-icon">
+    <img src="images/placeholder.png" ng-if="item.icon" lazy-img="{{ item.icon }}"/>
+  </div>
+  <div class="info">
+    <div><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
+    <div>
+     <span ng-if="item.event">{{ item.event }} - </span>
+     <span ng-if="!item.event && item.category">{{ item.category }} - </span>
+     <span class="alt">{{ item.city }}, {{item.state}}</span>
+    </div>
+  </div>
+</div>

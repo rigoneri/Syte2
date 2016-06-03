@@ -1,0 +1,9 @@
+<h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
+<span class="small-icon twitter"></span>
+<div class="content">
+  <p ng-bind-html="item.text"></p>
+  <div ng-if="item.pictures" ng-repeat="picture in item.pictures | limitTo:4" class="pictures" ng-class="{'multiple': item.pictures.length > 1}">
+    <span class="pic" lazy-img="{{picture.url}}" ng-click="openPost(item, $index)"></span>
+    <span class="icon play-video" ng-if="item.video"></span>
+  </div>
+</div>

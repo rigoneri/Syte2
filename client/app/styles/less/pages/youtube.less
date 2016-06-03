@@ -1,0 +1,209 @@
+.youtube-page {
+  position: relative;
+  opacity: 0;
+  .clearfix;
+
+  .user {
+    position: relative;
+    padding: 40px 0 15px 0;
+    height: 190px;
+    .clearfix;
+
+    .banner {
+      width: 61%;
+      height: 105px;
+      background-size: cover;
+      background-position: 50% 50%;
+      margin-bottom: 40px;
+      .border-radius(4px);
+    }
+
+    .picture {
+      width: 70px;
+      height: 70px;
+      .border-radius(40px);
+      overflow: hidden;
+      display: inline-block;
+      .box-shadow(@shadow: 0 2px 6px rgba(0,0,0,.9));
+      position: absolute;
+      top: 115px;
+      left: 20px;      
+      z-index: 2;
+
+      img {
+        width: 70px;
+        height: 70px;
+      }
+    }
+
+    .name {
+      position: absolute;
+      top: 150px;
+      left: 110px;
+      z-index: 2;
+    }
+
+    .stat {
+      position: absolute;
+      left: 270px;
+      top: 153px;
+
+      strong {
+        color: @link-color;
+      }
+    }
+  }
+
+  .posts {
+    .clearfix;
+    margin-top: 30px;
+    margin-left: -30px;
+
+    .post {
+      width: 28%;
+      float: left;
+      margin: 0 0 30px 30px;
+      position: relative;
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.02));
+
+        .info {
+          opacity: 1.0; 
+        }
+      }
+
+      img {
+        width: 100%;
+        cursor: pointer;
+        display: block;
+        .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      }
+
+      .icon.play-video {
+        position: absolute;
+        z-index: 1;
+        left: 50%;
+        top: 50%; 
+        margin-left: -25px;
+        margin-top: -25px;
+        pointer-events:none;
+      }
+    }
+
+    .info {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      background-color: rgba(0,0,0,0.7);
+      pointer-events:none;
+      z-index: 2;
+      opacity: 0;
+      .transition(e('all 320ms ease-out'));
+
+      .title {
+        font-weight: 400;
+        color: @text-color;
+        position: relative;
+        display: block;
+        margin: 10px;
+      }
+    }
+  }
+}
+
+.youtube-page.visible {
+  opacity: 1;
+}
+
+.youtube-page.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .user {
+    .picture {
+      .animation(e('scale-in 350ms'));
+    }
+
+    h2 {
+      .animation(e('scale-in 500ms'));
+    }
+
+    p {
+      .animation(e('scale-in 600ms'));
+    }
+  }
+
+  .posts .pic {
+    .animation(e('half-scale-in 500ms'));
+  }
+}
+
+.main-view.ng-leave .youtube-page {
+  .user {
+    .picture {
+      .animation(e('scale-in 400ms reverse'));
+    }
+  }
+
+  .posts .pic {
+    .animation(e('half-scale-in 500ms reverse'));
+  }
+}
+
+@media (max-width: 900px) {
+  .youtube-page {
+    .user .banner {
+      width: 80%;
+    }
+
+    .posts .post {
+      width: 35%;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .youtube-page {
+    .user .banner {
+      width: 100%;
+    }
+
+    .posts {
+      margin-left: -5%;
+
+      .post {
+        width: 45%;
+        margin: 0 0 20px 5%;
+      }
+    }
+  }
+}
+
+@media (max-width: 550px) {
+  .youtube-page {
+    .user {
+      height: auto;
+
+      .stat {
+        position: relative;
+        left: 0;
+        top: 10px;
+        clear: both;
+      }
+    }
+
+    .posts {
+      margin-left: 0;
+      margin-top: 0;
+
+      .post {
+        width: 100%;
+        margin: 0 0 15px 0;
+        float: none;
+      }
+    }
+  }
+}
+

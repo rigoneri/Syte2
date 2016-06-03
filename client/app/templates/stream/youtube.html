@@ -1,0 +1,7 @@
+<h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
+<span class="small-icon play"></span>
+<div class="content">
+  <img ng-if="item.image" class="pic" src="images/placeholder.png" lazy-img="{{ item.image }}" ng-click="openPost(item)" />
+  <span class="icon play-video"></span>
+  <p>{{ item.title }}</p>
+</div>

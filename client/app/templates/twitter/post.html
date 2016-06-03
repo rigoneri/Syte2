@@ -1,0 +1,11 @@
+<a href="{{ item.url }}" class="avatar" ng-if="item.user" target="_blank">
+  <img ng-src="{{ item.user.picture }}" />
+</a>
+<div class="content">
+  <h4><a href="{{ item.url }}" target="_blank">{{ item.user.name }} <span class="username">@{{ item.user.username }}</span></a><span am-time-ago="item.date" class="date"></span></h4>
+  <p ng-bind-html="item.text"></p>
+  <div ng-if="item.pictures" ng-repeat="picture in item.pictures | limitTo:4" class="pictures">
+    <span class="pic" lazy-img="{{picture.url}}" ng-click="openPost(item, $index)"></span>
+    <span class="icon play-video" ng-if="item.video"></span>
+  </div>
+</div>

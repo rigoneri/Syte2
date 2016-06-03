@@ -1,0 +1,104 @@
+// Clearfix for clearing floats
+.clearfix {
+  zoom: 1;
+  &:before, &:after { display: table; content: "";}
+  &:after {clear: both;}
+}
+
+// Border Radius
+.border-radius(@radius: 5px) {
+  -webkit-border-radius: @radius;
+          border-radius: @radius;
+}
+
+// Custom Border Radius
+.border-radius-custom(@topleft: 5px, @topright: 5px, @bottomleft: 5px, @bottomright: 5px) {
+  -webkit-border-radius: @topleft @topright @bottomright @bottomleft;
+  border-radius: @topleft @topright @bottomright @bottomleft;
+}
+
+// Drop shadows
+.box-shadow(@shadow: 0 1px 3px rgba(0,0,0,.25)) {
+  -webkit-box-shadow: @shadow;
+          box-shadow: @shadow;
+}
+
+.double-box-shadows(@shadow1: inset 0px 0px 2px rgba(255, 255, 255, 0.7), @shadow2: 0px 1px 3px rgba(0, 0, 0, 0.4)) {
+    -webkit-box-shadow: @shadow1, @shadow2;
+          box-shadow: @shadow1, @shadow2;
+}
+
+//3D Transform
+.transform(@transform:rotateY(0deg)) {
+  -webkit-transform: @transform;
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  transform: @transform;
+}
+
+// Transitions
+.transition(@transition) {
+  -webkit-transition: @transition;
+          transition: @transition;
+}
+
+.transition-2(@transition1, @transition2) {
+  -webkit-transition: @transition1, @transition2;
+          transition: @transition1, @transition2;
+}
+
+.animation(@animation) {
+  -webkit-animation: @animation;
+     -moz-animation: @animation;
+          animation: @animation;
+}
+
+// Gradients
+.gradient (@startColor: #555, @endColor: #333) {
+  background-color: @endColor;
+  background-repeat: repeat-x;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=0)"; // IE6 - 9
+  background-image: -khtml-gradient(linear, left top, left bottom, from(@startColor), to(@endColor)); // Konqueror
+  background-image: -ms-linear-gradient(top, @startColor, @endColor); // IE10
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @startColor), color-stop(100%, @endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(top, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: linear-gradient(top, @startColor, @endColor); // The standard
+}
+
+.horizontal-gradient (@startColor: #555, @endColor: #333) {
+  background-color: @endColor;
+  background-repeat: repeat-x;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=1)"; // IE6 - 9
+  background-image: -khtml-gradient(linear, left top, right top, from(@startColor), to(@endColor)); // Konqueror
+  background-image: -ms-linear-gradient(left, @startColor, @endColor); // IE10
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, @startColor), color-stop(100%, @endColor)); // Safari 4+, Chrome 2+
+  background-image: -webkit-linear-gradient(left, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: linear-gradient(left, @startColor, @endColor); // Le standard
+}
+
+.directional-gradient (@startColor: #555, @endColor: #333, @deg: 45deg) {
+  background-color: @endColor;
+  background-repeat: repeat-x;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=0)"; // IE6 - 9
+  background-image: -ms-linear-gradient(@deg, @startColor, @endColor); // IE10
+  background-image: -webkit-linear-gradient(@deg, @startColor, @endColor); // Safari 5.1+, Chrome 10+
+  background-image: linear-gradient(@deg, @startColor, @endColor); // The standard
+}
+
+.vertical-gradient-3 (@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
+  background-color: @endColor;
+  background-repeat: no-repeat;
+  filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=0)"; // IE6 - 9
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(@startColor), color-stop(@colorStop, @midColor), to(@endColor));
+  background-image: -webkit-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+  background-image: -ms-linear-gradient(@startColor, @midColor @colorStop, @endColor);
+  background-image: linear-gradient(@startColor, @midColor @colorStop, @endColor);
+}
+
+//Text Selection
+.text-select(@enabled: text) {
+  -webkit-user-select: @enabled;
+  -ms-user-select:@enabled; 
+  user-select:@enabled;
+}
+

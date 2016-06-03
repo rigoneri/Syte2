@@ -1,0 +1,35 @@
+<div class="tumblr-page" id="tumblr-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div ng-repeat="post in posts" class="post">
+    <div ng-if="post.post_type == 'text'">
+      <h2 class="title">{{ post.title }}</h2>
+      <div am-time-ago="post.date" class="date"></div>
+      <div ng-bind-html="post.body" class="body"></div>
+    </div>
+    <div ng-if="post.post_type == 'photo'">
+      <div am-time-ago="post.date" class="date"></div>
+      <div ng-if="post.photos" ng-repeat="picture in post.photos | limitTo:4" class="pictures" ng-class="{'multiple': post.photos.length > 1}">
+        <span class="pic" lazy-img="{{picture}}" ng-click="openPost(post, $index)"></span>
+      </div>
+      <p ng-if="post.caption" ng-bind-html="post.caption" class="body"></p>
+    </div>
+    <div ng-if="post.post_type == 'video' || post.post_type == 'audio'">
+      <h2 ng-if="post.title" class="title">{{ post.title }}</h2>
+      <div am-time-ago="post.date" class="date"></div>
+      <div class="player" ng-if="post.player" ng-bind-html="post.player"></div>
+      <p ng-if="post.caption" ng-bind-html="post.caption"class="body"></p>
+    </div>
+    <div ng-if="post.post_type == 'link'">
+      <h2 ng-if="post.title" class="title">{{ post.title }}</h2>
+      <div am-time-ago="post.date" class="date"></div>
+      <div ng-if="post.photos" ng-repeat="picture in post.photos | limitTo:4" class="pictures" ng-class="{'multiple': post.photos.length > 1}">
+        <span class="link-pic" lazy-img="{{picture}}"></span>
+      </div>
+    </div>
+    <div ng-if="post.post_type == 'quote'">
+      <div am-time-ago="post.date" class="date"></div>
+      <blockquote class="body">{{ post.quote }}</blockquote>
+      <p ng-if="post.source"><em>- {{ post.source }}</em></p>
+    </div>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

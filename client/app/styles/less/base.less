@@ -1,0 +1,67 @@
+@import "components/reset.less";
+@import "components/mixins.less";
+@import "variables.less";
+
+@font-face {
+  font-family: 'icons';
+  src:url("../fonts/icons.eot?omeqz4");
+  src:url("../fonts/icons.eot?omeqz4#iefix") format('embedded-opentype'),
+    url("../fonts/icons.woff?omeqz4") format('woff'),
+    url("../fonts/icons.ttf?omeqz4") format('truetype'),
+    url("../fonts/icons.svg?omeqz4#icons") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  -webkit-font-smoothing:antialiased;
+}
+
+body {
+  background-color: @bg-color;
+  font-family: "Lato", "Helvetica Neue", "Arial", sans-serif;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 300;
+  color: @text-color;
+
+  -ms-content-zooming: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  .text-select(none);
+}
+
+strong, b {
+  font-weight: 400;
+  color: @text-color-strong;
+}
+
+a {
+  color: @link-color;
+  text-decoration: none;
+  cursor: pointer; 
+}
+
+p { 
+  margin: 0 0 15px 0; 
+}
+
+blockquote {
+  margin: 10px;
+  padding: 0 0 0 15px;
+  border-left: 3px solid @link-color;
+}
+
+em {
+  font-style: italic;
+}
+
+iframe {
+  display: none;
+}
+
+.pre {
+  white-space: pre;
+}
+
+/* IE snapped view fix */
+@-ms-viewport { width: device-width; }

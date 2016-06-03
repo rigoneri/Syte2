@@ -1,0 +1,34 @@
+<div class="modal">
+  <div class="modal-background" ng-click="close()"></div>
+  <div class="modal-overlay">
+    <div class="content" ng-class="{'no-media': !item.pictures && !item.video}">
+      <div class="media" ng-if="item.pictures || item.video">
+        <img ng-if="picture" ng-src="{{ picture }}" />
+        <span ng-if="morePictures" class="icon left" ng-click="prevPicture()"></span>
+        <span ng-if="morePictures" class="icon right" ng-click="nextPicture()"></span>
+        <video ng-if="item.video" ng-src="{{ item.video | trusted }}" id="video" ng-click="playVideo()"></video>
+        <span ng-if="item.video" class="icon play" ng-show="!playing" ng-click="playVideo()"></span>
+      </div>
+      <div class="details">
+        <a href="{{ item.url }}" class="user-info" ng-if="item.user" target="_blank">
+          <span class="picture">
+            <img ng-src="{{ item.user.picture }}" />
+          </span>
+          <h4>@{{ item.user.username }}</h4>
+        </a>
+        <span am-time-ago="item.date" class="date"></span>
+        <div class="stats">
+         <a href="{{ item.url }}" ng-if="item.favorites" target="_blank">
+           <span class="small-icon heart"></span><span class="val">{{ item.favorites }}</span>
+         </a>
+         <a href="{{ item.url }}" ng-if="item.retweets" target="_blank">
+           <span class="small-icon loop"></span><span class="val">{{ item.retweets }}</span>
+         </a>
+        </div>
+        <p ng-bind-html="item.originalText" ng-if="item.originalText"></p>
+        <p ng-bind-html="item.text" ng-if="!item.originalText"></p>
+      </div>
+    </div>
+  </div>
+  <button class="close-btn" ng-click="close()"></button>
+</div>

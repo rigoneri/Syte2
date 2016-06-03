@@ -1,0 +1,7 @@
+<h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
+<span class="small-icon github"></span>
+<div class="content">
+  <p>Pushed <strong><ng-pluralize count="item.commits" when="{'1': '{} commit','other': '{} commits'}"></ng-pluralize></strong> to 
+    <a href="{{ item.repo_url }}" targe="_blank" ng-if="item.repo">{{ item.repo }}</a><span ng-if="!item.repo">a private repo</span> on Github.
+  </p>
+</div>

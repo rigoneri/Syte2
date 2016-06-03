@@ -1,0 +1,16 @@
+<div class="modal">
+  <div class="modal-background" ng-click="close()"></div>
+  <div class="modal-overlay">
+    <div class="content youtube">
+      <div class="media">
+        <iframe width="560" height="315" src="{{ youtubeEmbed | trusted }}" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="details">
+        <h3 class="title">{{ item.title }}</h3>
+        <span am-time-ago="item.date" class="date"></span>
+        <div ng-bind-html="item.description"></div>
+      </div>
+    </div>
+  </div>
+  <button class="close-btn" ng-click="close()"></button>
+</div>

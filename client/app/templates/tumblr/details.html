@@ -1,0 +1,13 @@
+<div class="modal">
+  <div class="modal-background" ng-click="close()"></div>
+  <div class="modal-overlay">
+    <div class="content no-details">
+      <div class="media" ng-if="item.photos">
+        <img ng-if="picture" ng-src="{{ picture }}" />
+        <span ng-if="morePictures" class="icon left" ng-click="prevPicture()"></span>
+        <span ng-if="morePictures" class="icon right" ng-click="nextPicture()"></span>
+      </div>
+    </div>
+  </div>
+  <button class="close-btn" ng-click="close()"></button>
+</div>

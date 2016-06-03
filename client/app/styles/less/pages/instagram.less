@@ -1,0 +1,269 @@
+.instagram-page {
+  position: relative;
+  opacity: 0;
+  .clearfix;
+
+  .user {
+    position: relative;
+    padding: 40px 0 15px 0;
+    .clearfix;
+
+    .picture {
+      width: 60px;
+      height: 60px;
+      .border-radius(40px);
+      overflow: hidden;
+      display: inline-block;
+      .box-shadow(@shadow: 0 2px 6px rgba(0,0,0,.9));
+      z-index: 2;
+      float: left;
+
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    .name {
+      float: left;
+      margin-left: 20px;
+      margin-top: 5px;
+
+      h2, .username {
+        position: relative;
+      }
+    }
+
+    .stats {
+      float: left;
+      .clearfix;
+      .border-radius(4px);
+      overflow: hidden;
+      background-color: @dark-bg-color;
+      margin-left: 70px;
+      width: 300px;
+
+      li {
+        width: 33%;
+        float: left;
+        text-align: center;
+        padding: 8px 0;
+        font-size: 12px;
+        line-height: 20px;
+      }
+
+      strong {
+        font-weight: 300;
+        color: @link-color;
+        display: block;
+        font-size: 16px;
+        line-height: 26px;
+      }
+    }
+  }
+
+  .bio {
+    position: relative;
+  }
+
+  .posts {
+    .clearfix;
+    margin-top: 30px;
+    margin-left: -30px;
+
+    .post {
+      width: 21%;
+      float: left;
+      margin: 0 0 30px 30px;
+      position: relative;
+      max-width: 250px;
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.02));
+
+        .stats {
+          opacity: 1.0; 
+        }
+      }
+
+      img {
+        width: 100%;
+        cursor: pointer;
+        display: block;
+        .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      }
+
+      .icon.play-video {
+        position: absolute;
+        z-index: 1;
+        left: 50%;
+        top: 50%; 
+        margin-left: -30px;
+        margin-top: -30px;
+        pointer-events:none;
+
+        font-size: 60px;
+        height: 60px;
+        width: 60px;
+        line-height: 60px;
+      }
+    }
+
+    .stats {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      background-color: @dark-bg-color;
+      pointer-events:none;
+      z-index: 2;
+      opacity: 0;
+      .transition(e('all 320ms ease-out'));
+
+      .small-icon {
+        font-size: 14px;
+        height: 24px;
+        line-height: 24px;
+        color: @text-color;
+        position: relative;
+        display: inline-block;
+        top: 50%;
+        margin-top: -10px;
+      }
+
+      .val {
+        font-weight: 500;
+        margin-left: 5px;
+        margin-right: 10px;
+        color: @text-color;
+        position: relative;
+        display: inline-block;
+        top: 50%;
+        margin-top: -10px;
+        vertical-align: top;
+      }
+    }
+  }
+}
+
+.instagram-page.visible {
+  opacity: 1;
+}
+
+.instagram-page.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .user {
+    .picture {
+      .animation(e('scale-in 350ms'));
+    }
+
+    h2 {
+      .animation(e('move-in 500ms'));
+    }
+
+    .username {
+      .animation(e('move-in 700ms'));
+    }
+
+    .stats li {
+      .animation(e('scale-in 500ms'));
+    }
+  }
+
+  p {
+    .animation(e('move-in 600ms'));
+  }
+
+  .posts .pic {
+    .animation(e('half-scale-in 500ms'));
+  }
+}
+
+.main-view.ng-leave .instagram-page {
+  .user {
+    .picture {
+      .animation(e('scale-in 400ms reverse'));
+    }
+
+    h2 {
+      .animation(e('move-out 500ms'));
+    }
+
+    .username {
+      .animation(e('move-out 700ms'));
+    }
+
+    .stats li {
+      .animation(e('scale-in 700ms reverse'));
+    }
+  }
+
+  p {
+    .animation(e('move-out 600ms'));
+  }
+
+  .posts .pic {
+    .animation(e('half-scale-in 500ms reverse'));
+  }
+}
+
+@media (max-width: 900px) {
+  .instagram-page .posts .post {
+    width: 26%;
+  }
+}
+
+@media (max-width: 750px) {
+  .instagram-page .user .stats {
+    float: none;
+    margin-left: 0;
+    clear: both;
+    position: relative;;
+    top: 20px;
+  }
+} 
+
+@media (max-width: 700px) {
+  .instagram-page {
+    .user .stats {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .posts {
+      margin-top: 10px;
+      margin-left: -5%;
+
+      .post {
+        width: 45%;
+        max-width: 45%;
+        margin: 0 0 20px 5%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .instagram-page .posts {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .instagram-page {
+    .posts {
+      margin-left: 0;
+
+      .post {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 0 15px 0;
+        float: none;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,357 @@
+.stream {
+  position: relative;
+  margin-left: 1%;
+  padding: 40px 0;
+  opacity: 0;
+
+  .stream-line {
+    height: 100%;
+    width: 4px;
+    background-color: @line-color;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    margin-left: 100px;
+  }
+
+  li {
+    .clearfix;
+    position: relative;
+  }
+
+  h2 {
+    margin-left: 100px;
+    padding: 10px 40px 30px 45px;
+    position: relative;
+  }
+
+  h3 {
+    float: left;
+    width: 100px;
+    color: @alt-text-color;
+    margin-top: 11px;
+  }
+
+  .small-icon {
+    position: absolute;
+    z-index: 1;
+    color: @alt-text-color;
+    font-size: 14px;
+    background-color: @line-color;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    .border-radius(20px);
+    left: 82px;
+    top: 4px;
+  }
+
+  .content {
+    position: relative;
+    float:left;
+    max-width: 80%;
+    padding: 0 40px 40px 45px;
+  }
+
+  .twitter {
+    .pictures {
+      display: inline-block;
+      margin-right: 5px;
+      position: relative;
+
+      &.multiple .pic {
+        width: 73px;
+        height: 73px;
+      }
+    }
+
+    .content {
+      padding-top: 11px;
+    }
+
+    .pic {
+      width: 150px;
+      height: 150px;
+      display: block;
+      background-size: cover;
+      background-position: 50% 50%;
+      cursor: pointer;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.07));
+      }
+    }
+
+    .icon.play-video {
+      position: absolute;
+      z-index: 1;
+      left: 50px;
+      top: 50px;
+      pointer-events: none;
+     }
+  }
+
+  .instagram {
+    .pic {
+      width: 150px;
+      height: 150px;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      cursor: pointer;
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.07));
+      }
+    }
+
+    .content {
+      padding-top: 6px;
+    }
+
+     .icon.play-video {
+        position: absolute;
+        z-index: 1;
+        left: 95px;
+        top: 55px;
+        pointer-events: none;
+     }
+  }
+
+  .foursquare {
+
+    .checkin-icon {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      background-color: @dark-bg-color;
+      .border-radius(5px);
+      text-align: center;
+      margin-right: 15px;
+    }
+
+    img {
+      width: 32px;
+      height: 32px;
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+
+    .info {
+      margin-left: 60px;
+      margin-bottom: 15px;
+    }
+
+    .alt {
+      opacity: 0.55;
+    }
+  }
+
+  .dribbble {
+    .pic {
+      width: 200px;
+      height: 150px;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      cursor: pointer;
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.07));
+      }
+    }
+
+    .content {
+      padding-top: 6px;
+    }
+  }
+
+  .tumblr {
+   .pictures {
+      display: inline-block;
+      margin-right: 5px;
+      margin-bottom: 10px;
+      position: relative;
+
+      &.multiple .pic, &.multiple .link-pic {
+        width: 73px;
+        height: 73px;
+      }
+    }
+
+    .content {
+      padding-top: 11px;
+    }
+
+    .pic {
+      width: 150px;
+      height: 150px;
+      display: block;
+      background-size: cover;
+      background-position: 50% 50%;
+      cursor: pointer;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.07));
+      }
+    }
+
+    .link-pic {
+      width: 150px;
+      height: 150px;
+      display: block;
+      background-size: cover;
+      background-position: 50% 50%;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+    }
+
+    .player {
+      margin-bottom: 15px;
+
+      iframe {
+        display: block;
+      }
+    }
+  }
+
+  .github .content {
+    padding-top: 11px;
+  }
+
+  .lastfm {
+    .pictures {
+      display: inline-block;
+      margin-right: 5px;
+      position: relative;
+    }
+
+    .content {
+      padding-top: 11px;
+    }
+
+    .pic {
+      width: 40px;
+      height: 40px;
+      display: block;
+      background-size: cover;
+      background-position: 50% 50%;
+      cursor: pointer;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.1));
+      }
+    }
+  }
+
+  .youtube {
+    .pic {
+      width: 250px;
+      height: 141px;
+      .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+      cursor: pointer;
+      .transition(e('all 320ms ease-out'));
+
+      &:hover {
+        .transform(@transform:scale(1.07));
+      }
+    }
+
+    .content {
+      padding-top: 6px;
+    }
+
+    .icon.play-video {
+      position: absolute;
+      z-index: 1;
+      left: 145px;
+      top: 50px;
+      pointer-events: none;
+     }
+  }
+}
+
+.stream.visible {
+  opacity: 1.0;
+}
+
+.stream.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .stream-line {
+    .animation(e('scale-in 500ms ease-in 50ms backwards'));
+  }
+
+  .stream-group:nth-child(-n+5) {
+
+    .small-icon {
+      .animation(e('scale-in 350ms'));
+    }
+    
+    .day-title {
+      .animation(e('move-in 500ms'));
+    }
+
+    .content {
+      .animation(e('move-in 600ms'));
+    }
+  }
+}
+
+.main-view.ng-leave .stream {
+
+  .small-icon, .stream-line {
+    .animation(e('scale-out 350ms'));
+  }
+
+  .stream-group:nth-child(-n+5) {
+    .day-title, .content {
+      .animation(e('move-out 500ms'));
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .stream {
+    .stream-line {
+      margin-left: 18px;
+    }
+
+    h2 {
+      margin-left: 15px;
+    }
+
+    h3 {
+      float: none;
+      width: 100%;
+      margin-left: 60px;
+    }
+
+    .small-icon {
+      left: 0;
+    }
+
+    .content {
+      max-width: 100%;
+      padding-left: 60px;
+      padding-top: 10px !important;
+    }
+
+    .lastfm h3 {
+      display: none;
+    }
+
+    .instagram .icon.play-video {
+      left: 110px;
+      top: 60px;
+    }
+
+    .youtube .icon.play-video {
+      top: 55px;
+      left: 160px;
+    }
+  }
+}

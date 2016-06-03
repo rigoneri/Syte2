@@ -1,0 +1,121 @@
+.tumblr-page {
+  position: relative;
+  opacity: 0;
+  .clearfix;
+  padding-top: 10px;
+
+  .post {
+    padding: 40px 100px 20px 0;
+    border-top: 1px solid @line-color;
+  }
+
+  .post:first-child {
+    border-top: 0;
+  }
+
+  .date {
+    color: @alt-text-color;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .title, .body, .player {
+    position: relative;
+  }
+
+  .pictures {
+    display: inline-block;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    position: relative;
+
+    &.multiple .pic, &.multiple .link-pic {
+      width: 150px;
+      height: 150px;
+
+      &:hover {
+        .transform(@transform:scale(1.05));
+      }
+    }
+  }
+
+  .pic {
+    width: 300px;
+    height: 300px;
+    display: block;
+    background-size: cover;
+    background-position: 50% 50%;
+    cursor: pointer;
+    .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+    .transition(e('all 320ms ease-out'));
+
+    &:hover {
+      .transform(@transform:scale(1.03));
+    }
+  }
+
+  .link-pic {
+    width: 300px;
+    height: 300px;
+    display: block;
+    background-size: cover;
+    background-position: 50% 50%;
+    .box-shadow(@shadow: 0 1px 4px rgba(0,0,0,.6));
+  }
+
+  .player {
+    margin-bottom: 15px;
+
+    iframe {
+      display: block;
+    }
+  }
+}
+
+.tumblr-page.visible {
+  opacity: 1;
+}
+
+.tumblr-page.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .post:nth-child(-n+3) {
+    .title {
+      .animation(e('move-in 500ms'));
+    }
+
+    .player {
+      .animation(e('move-in 700ms'));
+    }
+
+    .date {
+      .animation(e('move-in 600ms'));
+    }
+
+    .body {
+      .animation(e('move-in 500ms'));
+    }
+  }
+
+}
+
+.main-view.ng-leave .tumblr-page {
+  .post:nth-child(-n+3) {
+    .title {
+      .animation(e('move-out 500ms'));
+    }
+
+    .player {
+      .animation(e('move-out 700ms'));
+    }
+
+    .date {
+      .animation(e('move-out 600ms'));
+    }
+
+    .body {
+      .animation(e('move-out 350ms'));
+    }
+  }
+}
+

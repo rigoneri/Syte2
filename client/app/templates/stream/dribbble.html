@@ -1,0 +1,6 @@
+<h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
+<span class="small-icon dribbble"></span>
+<div class="content">
+  <img ng-if="item.picture" class="pic" src="images/placeholder.png" lazy-img="{{ item.picture }}" ng-click="openPost(item)" />
+  <p>{{ item.title }}</p>
+</div>

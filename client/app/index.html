@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rigo [Rodrigo Neri]</title>
+    <meta name="description" content="Personal website and blog of developer, designer and entrepreneur Rodrigo Neri also known as Rigo. Follow him at @rigoneri" />
+    <meta name="keywords" content="Rodrigo Neri, rigoneri, developer, designer, entrepreneur, instin, myhomework" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="clientApp">
+    <!--[if lte IE 8]><p style="width:100%; text-align: center; margin:0; background: black; padding: 10px 0; position: absolute; z-index: 100;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <div class="main-body">
+      <main-nav></main-nav>
+      <div ng-view class="main-view"></div>
+    </div>
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/angular-modal-service/dst/angular-modal-service.js"></script>
+    <script src="bower_components/angular-lazy-img/release/angular-lazy-img.js"></script>
+    <script src="bower_components/google-maps/lib/Google.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/env.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/stream.js"></script>
+    <script src="scripts/twitter.js"></script>
+    <script src="scripts/instagram.js"></script>
+    <script src="scripts/foursquare.js"></script>
+    <script src="scripts/dribbble.js"></script>
+    <script src="scripts/tumblr.js"></script>
+    <script src="scripts/github.js"></script>
+    <script src="scripts/lastfm.js"></script>
+    <script src="scripts/youtube.js"></script>
+    <!-- endbuild -->
+
+     <script>
+       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+       ga('create', GOOGLE_ANALYTICS_KEY);
+       ga('send', 'pageview');
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<div class="stream" id="main-stream" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="stream-line"></div>
+  <div ng-repeat="group in groups" class="stream-group">
+    <h2 class="day-title">{{ group.title }}</h2>
+    <ul>
+      <li ng-repeat="item in group.items" class="{{ item.type }}">
+        <twitter-stream-post item="item" ng-if="item.type == 'twitter'"></twitter-stream-post>
+        <instagram-stream-post item="item" ng-if="item.type == 'instagram'"></instagram-stream-post>
+        <foursquare-stream-post item="item" ng-if="item.type == 'foursquare'"></foursquare-stream-post>
+        <dribbble-stream-post item="item" ng-if="item.type == 'dribbble'"></dribbble-stream-post>
+        <tumblr-stream-post item="item" ng-if="item.type == 'tumblr'"></tumblr-stream-post>
+        <github-stream-activity item="item" ng-if="item.type == 'github'"></github-stream-activity>
+        <lastfm-activity item="item" ng-if="item.type == 'lastfm'"></lastfm-activity>
+        <youtube-post item="item" ng-if="item.type == 'youtube'"></youtube-post>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

@@ -1,0 +1,22 @@
+<div class="youtube-page" id="youtube-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <div ng-if="user.banner" class="banner" src="images/placeholder.png" lazy-img="{{ user.banner }}"></div>  
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
+    </a>
+    <h2 class="name">{{ user.name }}</h2>
+    <p ng-if="user.subscribers" class="stat"><strong>{{ user.subscribers }}</strong> Subscribers</p>
+  </div>
+  <div class="posts">
+    <ul>
+      <li ng-repeat="item in posts" class="post">
+        <img ng-if="item.image" class="pic" src="images/placeholder.png" lazy-img="{{ item.image }}" ng-click="openPost(item)" />
+        <span class="icon play-video"></span>
+        <div class="info">
+          <p class="title">{{ item.title }}</p>
+        </div>
+      <li>
+    </li>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

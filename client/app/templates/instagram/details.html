@@ -1,0 +1,32 @@
+<div class="modal">
+  <div class="modal-background" ng-click="close()"></div>
+  <div class="modal-overlay">
+    <div class="content">
+      <div class="media">
+        <img ng-if="item.pictureHD && !item.video" ng-src="{{ item.pictureHD }}" />
+        <img ng-if="item.picture && !item.pictureHD && !item.video" ng-src="{{ item.picture }}" />
+        <video ng-if="item.video" ng-src="{{ item.video.url | trusted }}" id="video" ng-click="playVideo()"></video>
+        <span ng-if="item.video" class="icon play" ng-show="!playing" ng-click="playVideo()"></span>
+      </div>
+      <div class="details">
+        <a href="{{ item.url }}" class="user-info" ng-if="item.user" target="_blank">
+          <span class="picture">
+            <img ng-src="{{ item.user.profile_picture }}" />
+          </span>
+          <h4>{{ item.user.username }}</h4>
+        </a>
+        <span am-time-ago="item.date" class="date"></span>
+        <div class="stats">
+         <a href="{{ item.url }}" ng-if="item.likes" target="_blank">
+           <span class="small-icon heart"></span><span class="val">{{ item.likes }}</span>
+         </a>
+         <a href="{{ item.url }}" ng-if="item.comments" target="_blank">
+           <span class="small-icon comment"></span><span class="val">{{ item.comments }}</span>
+         </a>
+        </div>
+        <p ng-bind-html="item.text"></p>
+      </div>
+    </div>
+  </div>
+  <button class="close-btn" ng-click="close()"></button>
+</div>

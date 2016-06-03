@@ -1,0 +1,248 @@
+.lastfm-page {
+  position: relative;
+  opacity: 0;
+  .clearfix;
+
+  .user {
+    position: relative;
+    float: left;
+    width: 35%;
+    padding: 40px 0;
+
+    .picture {
+      width: 60px;
+      height: 60px;
+      .border-radius(40px);
+      overflow: hidden;
+      display: inline-block;
+      .box-shadow(@shadow: 0 2px 6px rgba(0,0,0,.9));
+      position: absolute;
+      z-index: 1;
+
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    h2 {
+      margin-left: 80px;
+      margin-top: 5px;
+      position: relative;
+    }
+
+    p {
+      position: relative;
+      padding: 10px 0;
+    }
+
+    .username {
+      margin-left: 80px;
+      margin-bottom: 30px;
+      display: block;
+      position: relative;
+    }
+
+    h3 {
+      position: relative;
+      margin-bottom: 10px;
+    }
+  }
+
+  .tracks {
+    position: relative;
+
+    li.track {
+      border-top: 1px solid @line-color;
+      padding: 15px 0;
+      position: relative;
+    }
+
+    .track-image {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      background-color: @dark-bg-color;
+      .border-radius(5px);
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      .border-radius(5px);
+      display: block;
+    }
+
+    .icon {
+      width: 32px;
+      height: 32px;
+      margin-top: 8px;
+      opacity: 0.1;
+      font-size: 20px;
+      text-indent: -2px;
+    }
+
+    .track-info {
+      margin-left: 60px;
+      position: relative;
+    }
+
+    .date {
+      color: @alt-text-color;
+      font-size: 12px;
+    }
+  }
+
+  .top-stats {
+    float: left;
+    width: 63%;
+    padding: 40px 0 40px 40px;
+    position: relative;
+
+    h2 {
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .top {
+      .clearfix;
+      margin-bottom: 30px;
+
+      li {
+        position: relative;
+        float: left;
+        width: 125px;
+        height: 125px;
+        cursor: pointer;
+      }
+
+      li:first-child {
+        width: 250px;
+        height: 250px;
+      }
+
+      .image {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        background-size: cover;
+        background-position: 50% 50%;
+      }
+
+      .info {
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        width: 100%;
+        padding: 100px 10px 10px 10px;
+        background: rgba(0,0,0,0.5);
+        background: -moz-linear-gradient(top, rgba(0,0,0,0) 20%, rgba(0,0,0,0.8) 100%);
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0) 20%, rgba(0,0,0,0.8) 100%);
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 20%, rgba(0,0,0,0.8) 100%);
+
+        a {
+          color: @text-color;
+          font-weight: 400;
+          display: block;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .plays, .artist {
+          font-size: 12px;
+          line-height: 20px;
+        }
+      }
+    }
+
+  }
+}
+
+.lastfm-page.visible {
+  opacity: 1;
+}
+
+.lastfm-page.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .user {
+    .picture {
+      .animation(e('scale-in 350ms'));
+    }
+
+    h2, .username {
+      .animation(e('move-in 500ms'));
+    }
+  }
+
+  .track-image {
+    .animation(e('scale-in 500ms'));
+  }
+
+  .track-info, .top-stats h2 {
+    .animation(e('move-in 600ms'));
+  }
+
+  .top-stats li {
+    .animation(e('half-scale-in 500ms'));
+  }
+}
+
+.main-view.ng-leave .lastfm-page {
+
+  .user {
+    .picture {
+      .animation(e('scale-in 400ms reverse'));
+    }
+  }
+
+  .track-info, .top-stats h2 {
+    .animation(e('move-out 600ms'));
+  }
+
+  .top-stats li {
+    .animation(e('half-scale-in 500ms reverse'));
+  }
+}
+
+@media (max-width: 900px) {
+  .lastfm-page {
+    .user {
+      width: 43%;
+    }
+
+    .top-stats {
+      width: 57%;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .lastfm-page {
+    .user {
+      float: none;
+      width: 100%;
+      padding-bottom: 0;
+    }
+
+    .tracks {
+      margin-bottom: 20px;
+      li.track {
+        display: none;
+      }
+
+      li.track:nth-child(-n+10) {
+        display: block;
+      }
+    }
+
+    .top-stats {
+      float: none;
+      width: 100%;
+      padding: 0;
+    }
+  }
+}

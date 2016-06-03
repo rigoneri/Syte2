@@ -1,0 +1,277 @@
+.github-page {
+  position: relative;
+  opacity: 0;
+  .clearfix;
+
+  .user {
+    position: relative;
+    float: left;
+    width: 35%;
+    padding: 40px 0;
+
+    .picture {
+      width: 60px;
+      height: 60px;
+      .border-radius(40px);
+      overflow: hidden;
+      display: inline-block;
+      .box-shadow(@shadow: 0 2px 6px rgba(0,0,0,.9));
+      position: absolute;
+      z-index: 1;
+
+      img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    h2 {
+      margin-left: 80px;
+      margin-top: 5px;
+      position: relative;
+    }
+
+    .username {
+      margin-left: 80px;
+      margin-bottom: 30px;
+      display: block;
+      position: relative;
+    }
+
+    h3 {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .stats {
+      .clearfix;
+      .border-radius(4px);
+      overflow: hidden;
+      background-color: @dark-bg-color;
+      margin-bottom: 30px;
+
+      li {
+        width: 33%;
+        float: left;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 12px;
+        line-height: 20px;      
+      }
+
+      strong {
+        font-weight: 300;
+        color: @link-color;
+        display: block;
+        font-size: 16px;
+        line-height: 26px;
+      }
+    }
+
+  }
+
+  .repos {
+
+    li.repo {
+      border-top: 1px solid @line-color;
+      padding: 15px 0;
+      position: relative;
+    }
+
+    a {
+      font-weight: 400;
+      position: relative;
+    }
+
+    p {
+      position: relative;
+      margin: 0;
+      padding: 10px 0;
+    }
+
+    .repo-stats {
+      position: relative;
+      .clearfix;
+
+      li {
+        display: inline-block;
+        float: left;
+        margin-right: 10px;
+        color: @alt-text-color;
+        font-weight: 400;
+      }
+
+      .small-icon {
+        font-size: 14px;
+        line-height: 24px;
+        height: 24px;
+        margin-right: 5px;
+        color: @alt-text-color;
+      }
+
+    }
+  }
+
+  .activities {
+    float: left;
+    width: 65%;
+    padding: 40px 0 40px 40px;
+
+    ul, h2 {
+      display: block;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    li {
+      border-top: 1px solid @line-color;
+      padding: 15px 0;
+      position: relative;
+    }
+
+    a {
+      font-weight: 400;
+      position: relative;
+    }
+
+    p {
+      position: relative;
+      margin: 0;
+      padding: 0;
+    }
+
+    .icon {
+      color: @alt-text-color;
+      position: absolute;
+    }
+
+    .date {
+      position: relative;
+      color: @alt-text-color;
+      font-size: 12px;
+      margin-left: 40px;
+      font-weight: 400;
+    }
+
+    .description {
+      position: relative;
+      margin: 2px 0 5px 40px;
+    }
+
+    div.comment {
+      position: relative;
+      opacity: 0.55;
+      margin-left: 40px;
+      margin-bottom: 5px;
+    }
+
+  }
+}
+
+.github-page.visible {
+  opacity: 1;
+}
+
+.github-page.animate-enter {
+  .animation(e('fade-in 200ms ease-in backwards'));
+
+  .user {
+    .picture {
+      .animation(e('scale-in 350ms'));
+    }
+
+    h2, .username {
+      .animation(e('move-in 500ms'));
+    }
+
+    .repo a {
+      .animation(e('move-in 400ms'));
+    }
+
+    p {
+      .animation(e('move-in 600ms'));
+    }
+
+    .repo-stats {
+      .animation(e('move-in 800ms')); 
+    }
+
+    .stats li {
+      .animation(e('scale-in 500ms'));
+    }
+  }
+
+  .activities {
+    .icon {
+      .animation(e('scale-in 500ms'));
+    }
+
+    .description {
+      .animation(e('move-in 500ms'));
+    }
+
+    div.comment {
+      .animation(e('move-in 500ms')); 
+    }
+
+    .date {
+      .animation(e('move-in 600ms'));
+    }
+  }
+}
+
+.main-view.ng-leave .github-page {
+  .user {
+    .picture {
+      .animation(e('scale-in 400ms reverse'));
+    }
+
+    .stats li {
+      .animation(e('scale-in 700ms reverse'));
+    }
+
+    p {
+      .animation(e('move-out 700ms'));
+    }
+  }
+
+  .activities { 
+    .description {
+      .animation(e('move-out 700ms'));
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .github-page {
+    .user {
+      width: 40%;
+    }
+
+    .activities {
+      width: 60%;
+    }
+  }
+} 
+
+@media (max-width: 700px) {
+  .github-page {
+    .user {
+      float: none;
+      width: 100%;
+      padding-bottom: 0;
+    }
+
+    .repos {
+      margin-bottom: 20px;
+    }
+
+    .activities {
+      float: none;
+      width: 100%;
+      padding: 0;
+    }
+  }
+}

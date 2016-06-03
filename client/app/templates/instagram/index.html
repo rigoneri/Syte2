@@ -1,0 +1,30 @@
+<div class="instagram-page" id="instagram-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
+  <div class="user">
+    <a href="{{ user.url }}" class="picture" target="_blank">
+      <img ng-if="user.profile_picture" src="images/placeholder.png" lazy-img="{{ user.profile_picture }}" />
+    </a>
+    <div class="name">
+      <h2>{{ user.full_name }}</h2>
+      <a href="{{ user.url }}" class="username" target="_blank">@{{ user.username }}</a>
+    </div>
+    <ul class="stats" ng-if="user.counts">
+      <li ng-if="user.counts.media">Posts <strong>{{ user.counts.media }}</strong></li>
+      <li ng-if="user.counts.follows">Following <strong>{{ user.counts.follows }}</strong></li>
+      <li ng-if="user.counts.followed_by">Followers <strong>{{ user.counts.followed_by }}</strong></li>
+    </ul>
+  </div>
+  <p ng-if="user.bio" class="bio">{{ user.bio }}</p>
+  <div class="posts">
+    <ul>
+      <li ng-repeat="item in posts" class="post">
+        <img ng-if="item.picture" class="pic" src="images/placeholder.png" lazy-img="{{ item.picture }}" ng-click="openPost(item)" />
+        <span class="icon play-video" ng-if="item.video"></span>
+        <div class="stats">
+          <span class="small-icon heart"></span><span class="val">{{ item.likes }}</span>
+          <span class="small-icon comment"></span><span class="val">{{ item.comments }}</span>
+        </div>
+      <li>
+    </li>
+  </div>
+</div>
+<div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>
