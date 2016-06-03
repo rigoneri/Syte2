@@ -1,3 +1,5 @@
+process.env.PWD = process.cwd();
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -44,7 +46,6 @@ if (app.get('env') === 'production') {
     app.set('mogodbURL', process.env.MONGODB_URI);
 
     //using process.env.PWD instead of __dirname for heroku
-    process.env.PWD = process.cwd();
     app.use(express.static(path.join(process.env.PWD, 'dist')));
 
     // production error handler
