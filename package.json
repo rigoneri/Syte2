@@ -19,5 +19,8 @@
     "request": "^2.72.0",
     "serve-favicon": "~2.3.0",
     "twitter": "^1.2.5"
+  },
+  "engines": {
+    "npm": "2.15.1"
   }
 }
