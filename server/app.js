@@ -43,8 +43,9 @@ if (app.get('env') === 'development') {
 if (app.get('env') === 'production') {
     app.set('mogodbURL', process.env.MONGODB_URI);
 
-    // changes it to use the optimized version for production
-    app.use(express.static(path.join(__dirname, '/dist')));
+    //using process.env.PWD instead of __dirname for heroku
+    process.env.PWD = process.cwd();
+    app.use(express.static(path.join(process.env.PWD, '/dist')));
 
     // production error handler
     // no stacktraces leaked to user
