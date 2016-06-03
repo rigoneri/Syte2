@@ -44,7 +44,7 @@ if (app.get('env') === 'production') {
     app.set('mogodbURL', process.env.MONGODB_URI);
 
     // changes it to use the optimized version for production
-    app.use(express.static(__dirname + '/dist'));
+    app.use(express.static(path.join(__dirname, '/public')));
 
     // production error handler
     // no stacktraces leaked to user
