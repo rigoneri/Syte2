@@ -45,7 +45,7 @@ if (app.get('env') === 'production') {
 
     //using process.env.PWD instead of __dirname for heroku
     process.env.PWD = process.cwd();
-    app.use(express.static(path.join(process.env.PWD, '/dist')));
+    app.use(express.static(path.join(process.env.PWD, 'dist')));
 
     // production error handler
     // no stacktraces leaked to user
