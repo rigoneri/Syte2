@@ -10,6 +10,14 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/setup', function(req, res) {
+  Foursquare.setup(function(error, data) {
+    if (!error) {
+      res.status(200).json(data);
+    }
+  });
+});
+
 router.get('/user', function(req, res) {
   Foursquare.user(function(error, data) {
     if (!error) {
