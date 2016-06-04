@@ -74,6 +74,10 @@ angular.module('clientApp')
           setTimeout(function() {
             $scope.animateEnter = true;
             $scope.visible = true;
+            
+            //for some reason the track images sometimes don't show on page load, this forces it...
+            $rootScope.$emit('lazyImg:refresh');
+
             if (!$scope.$$phase) {
                $scope.$apply();
             }

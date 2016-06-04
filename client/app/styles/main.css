@@ -459,6 +459,7 @@ h4,
   z-index: 100;
   display: table;
   height: 100%;
+  min-height: 1200px;
   width: 100%;
   color: #282828;
   font-weight: 400;
@@ -1549,6 +1550,14 @@ h4,
     left: 160px;
   }
 }
+@media (max-width: 480px) {
+  .stream {
+    overflow-x: hidden;
+  }
+  .stream .content {
+    padding-right: 10px;
+  }
+}
 .twitter-page {
   position: relative;
   opacity: 0;
@@ -2130,16 +2139,6 @@ h4,
     margin-top: 0;
   }
 }
-@media (max-width: 400px) {
-  .dribbble-page .posts {
-    margin-left: 0;
-  }
-  .dribbble-page .posts .post {
-    width: 100%;
-    margin: 0 0 15px 0;
-    float: none;
-  }
-}
 .instagram-page {
   position: relative;
   opacity: 0;
@@ -2412,17 +2411,6 @@ h4,
 @media (max-width: 480px) {
   .instagram-page .posts {
     margin-top: 5px;
-  }
-}
-@media (max-width: 400px) {
-  .instagram-page .posts {
-    margin-left: 0;
-  }
-  .instagram-page .posts .post {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 15px 0;
-    float: none;
   }
 }
 .youtube-page {
@@ -3035,6 +3023,14 @@ h4,
   -webkit-animation: move-out 350ms;
   -moz-animation: move-out 350ms;
   animation: move-out 350ms;
+}
+@media (max-width: 480px) {
+  .tumblr-page .post {
+    padding-right: 0;
+  }
+  .tumblr-page .post img {
+    max-width: 100%;
+  }
 }
 .foursquare-page {
   position: relative;

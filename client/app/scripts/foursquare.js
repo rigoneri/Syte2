@@ -1,6 +1,8 @@
+/*globals  GOOGLE_MAPS_KEY */
 'use strict';
 
 angular.module('clientApp')
+
   .controller('FoursquareCtrl', ['$scope', '$rootScope', '$http', '$window', 'moment',
     function($scope, $rootScope, $http, $window, moment) {
       $scope.user = {};
