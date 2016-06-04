@@ -4,6 +4,8 @@ var request = require('request'),
       dates = require('../utils/dates'),
       async = require('async');
 
+var LASTFM_API_URL = 'http://ws.audioscrobbler.com/2.0/';
+
 var lastfmTracks = {};
 var lastUpdated;
 
@@ -16,7 +18,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, lastfmTracks[start]);
         } else {
           db.collection('lastfmdb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Lastfm month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -31,7 +33,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, lastfmTracks[start]);
       } else {
         db.collection('lastfmdb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Lastfm month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -56,7 +58,7 @@ exports.update = function(cb) {
     }
 
     if (needUpdate) {
-      var from = moment(moment(date).format('YYYY-MM-DD')).subtract(1, 'day');
+      var from = moment(date).subtract(1, 'day');
       var page = 1;
       var groups = {};
 
@@ -67,8 +69,9 @@ exports.update = function(cb) {
   
             for(var i=0; i<activities.length; i++) {
               var activity = activities[i];
-              if (groups[activity.day]) {
-                var group = groups[activity.day];
+              var day = moment(activity.date).format('YYYY-MM-DD');
+              if (groups[day]) {
+                var group = groups[day];
                 if (group[activity.artist]) {
                   group[activity.artist].plays += 1;
                 } else {
@@ -77,7 +80,7 @@ exports.update = function(cb) {
               } else {
                 var group = {};
                 group[activity.artist] = activity;
-                groups[activity.day] = group;
+                groups[day] = group;
               }
             }
 
@@ -135,8 +138,9 @@ exports.setup = function(cb) {
         
         for(var i=0; i<activities.length; i++) {
           var activity = activities[i];
-          if (groups[activity.day]) {
-            var group = groups[activity.day];
+          var day = moment(activity.date).format('YYYY-MM-DD');
+          if (groups[day]) {
+            var group = groups[day];
             if (group[activity.artist]) {
               group[activity.artist].plays += 1;
             } else {
@@ -145,7 +149,7 @@ exports.setup = function(cb) {
           } else {
             var group = {};
             group[activity.artist] = activity;
-            groups[activity.day] = group;
+            groups[day] = group;
           }
         }
 
@@ -233,7 +237,7 @@ function _groupActivitiesToSave(groups) {
 }
 
 exports.fetch = function(count, page, cb, from) { 
-  var url = process.env.LASTFM_API_URL + '?method=user.getrecenttracks&user=' +
+  var url = LASTFM_API_URL + '?method=user.getrecenttracks&user=' +
             process.env.LASTFM_USERNAME + '&extended=1&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json&limit=' + count;
 
@@ -323,7 +327,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.LASTFM_API_URL + '?method=user.getinfo&user=' +
+  var url = LASTFM_API_URL + '?method=user.getinfo&user=' +
             process.env.LASTFM_USERNAME + '&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json';
 
@@ -422,7 +426,7 @@ exports.topActivity =  function(cb) {
 };
 
 function _fetchTopArtists(cb) {
-  var url = process.env.LASTFM_API_URL + '?method=user.gettopartists&user=' +
+  var url = LASTFM_API_URL + '?method=user.gettopartists&user=' +
             process.env.LASTFM_USERNAME + '&period=6month&limit=5&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json';
 
@@ -462,7 +466,7 @@ function _fetchTopArtists(cb) {
 };
 
 function _fetchTopAlbums(cb) {
-  var url = process.env.LASTFM_API_URL + '?method=user.gettopalbums&user=' +
+  var url = LASTFM_API_URL + '?method=user.gettopalbums&user=' +
             process.env.LASTFM_USERNAME + '&period=6month&limit=5&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json';
 
@@ -506,7 +510,7 @@ function _fetchTopAlbums(cb) {
 };
 
 function _fetchTopTracks(cb) {
-  var url = process.env.LASTFM_API_URL + '?method=user.gettoptracks&user=' +
+  var url = LASTFM_API_URL + '?method=user.gettoptracks&user=' +
             process.env.LASTFM_USERNAME + '&period=6month&limit=5&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json';
 

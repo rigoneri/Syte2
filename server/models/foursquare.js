@@ -3,6 +3,8 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
+var FOURSQUARE_API_URL = 'https://api.foursquare.com/v2/'
+
 var foursquareCheckins = {};
 var lastUpdated;
 
@@ -15,7 +17,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, foursquareCheckins[start]);
         } else {
           db.collection('foursquaredb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Foursquare month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -30,7 +32,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, foursquareCheckins[start]);
       } else {
         db.collection('foursquaredb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Foursquare month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -125,7 +127,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, offset, cb) { 
-  var url = process.env.FOURSQUARE_API_URL + 'users/self/checkins?oauth_token=' +
+  var url = FOURSQUARE_API_URL + 'users/self/checkins?oauth_token=' +
             process.env.FOURSQUARE_ACCESS_TOKEN + '&v=20160520&limit=' + count;
 
   if (offset) {
@@ -148,7 +150,6 @@ exports.fetch = function(count, offset, cb) {
           var cleanedPost = {
             'id': checkin.id,
             'date': createdDate.toISOString(),
-            'day': moment(createdDate).format('YYYY-MM-DD'),
             'type': 'foursquare',
             'title': checkin.venue.name
           };
@@ -205,7 +206,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.FOURSQUARE_API_URL + 'users/self?oauth_token=' +
+  var url = FOURSQUARE_API_URL + 'users/self?oauth_token=' +
             process.env.FOURSQUARE_ACCESS_TOKEN + '&v=20160520';
 
   request(url, function (error, response, body) {

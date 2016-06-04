@@ -5,7 +5,7 @@ var Twitter = require('twitter'),
 
 var twitterPosts = {};
 var lastUpdated;
-var twitterUser;;
+var twitterUser;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
@@ -16,7 +16,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, twitterPosts[start]);
         } else {
           db.collection('twitterdb').find({
-            'day': { $gte: start, $lte: end },
+            'date': { $gte: start, $lte: end },
             'type': 'twitter'
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Twitter month:', start,' got from db: ',  posts.length);
@@ -32,7 +32,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, twitterPosts[start]);
       } else {
         db.collection('twitterdb').find({
-          'day': { $gte: start, $lte: end },
+          'date': { $gte: start, $lte: end },
           'type': 'twitter'
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Twitter month:', start,' got from db: ',  posts.length);
@@ -221,7 +221,6 @@ exports.fetch = function(count, max_id, cb) {
           var post = {
             'id': tweet.id_str,
             'date': createdDate.toISOString(),
-            'day': moment(createdDate).format('YYYY-MM-DD'),
             'type': 'twitter',
             'text': linkifyText(tweet.text)
           };

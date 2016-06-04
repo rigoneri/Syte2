@@ -3,7 +3,7 @@ var express = require('express'),
      Github = require('../models/github');
 
 router.get('/', function(req, res) {
-  Github.monthActvity(0, function(error, data) {
+  Github.monthActvity(1, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

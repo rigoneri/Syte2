@@ -3,6 +3,8 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
+var TUMBLR_API_URL = 'http://api.tumblr.com/v2/blog/';
+
 var tumblrPosts = {};
 var lastUpdated;
 
@@ -15,7 +17,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, tumblrPosts[start]);
         } else {
           db.collection('tumblrdb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Tumblr month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -30,7 +32,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, tumblrPosts[start]);
       } else {
         db.collection('tumblrdb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Tumblr month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -154,7 +156,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, offset, cb) { 
-  var url = process.env.TUMBLR_API_URL + process.env.TUMBLR_BLOG + '/posts?api_key=' +
+  var url = TUMBLR_API_URL + process.env.TUMBLR_BLOG + '/posts?api_key=' +
             process.env.TUMBLR_API_KEY + '&limit=' + count;
 
   if (offset) {
@@ -177,7 +179,6 @@ exports.fetch = function(count, offset, cb) {
           var cleanedPost = {
             'id': post.id,
             'date': createdDate.toISOString(),
-            'day': moment(createdDate).format('YYYY-MM-DD'),
             'type': 'tumblr',
             'url': post.post_url,
             'slug': post.slug,

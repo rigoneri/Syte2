@@ -3,6 +3,7 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
+var DRIBBBLE_API_URL = 'https://api.dribbble.com/v1/';
 var dribbblePosts = {};
 var lastUpdated;
 
@@ -15,7 +16,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, dribbblePosts[start]);
         } else {
           db.collection('dribbbledb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Dribbble month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -40,7 +41,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, dribbblePosts[start]);
       } else {
         db.collection('dribbbledb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Dribbble month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -171,7 +172,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, page, cb) { 
-  var url = process.env.DRIBBBLE_API_URL + 'users/'+ 
+  var url = DRIBBBLE_API_URL + 'users/'+ 
             process.env.DRIBBBLE_USERNAME + '/shots?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN + '&per_page=' + count;
 
@@ -190,7 +191,6 @@ exports.fetch = function(count, page, cb) {
         var cleanedPost = {
           'id': post.id,
           'date': createdDate.toISOString(),
-          'day': moment(createdDate).format('YYYY-MM-DD'),
           'type': 'dribbble',
           'title': post.title,
           'text': post.description,
@@ -241,7 +241,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.DRIBBBLE_API_URL + 'users/'+ 
+  var url = DRIBBBLE_API_URL + 'users/'+ 
             process.env.DRIBBBLE_USERNAME + '?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN;
 

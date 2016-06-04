@@ -3,6 +3,10 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
+var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/',
+    INSTAGRAM_OAUTH_AUTHORIZE_URL = 'https://api.instagram.com/oauth/authorize',
+    INSTAGRAM_OAUTH_ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
+
 var instagramPosts = {};
 var lastUpdated;
 
@@ -15,7 +19,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, instagramPosts[start]);
         } else {
           db.collection('instagramdb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Instagram month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -30,7 +34,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, instagramPosts[start]);
       } else {
         db.collection('instagramdb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Instagram month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -131,8 +135,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, max_id, cb) {
-  var url = process.env.INSTAGRAM_API_URL + 
-            'users/' + process.env.INSTAGRAM_USER_ID + 
+  var url = INSTAGRAM_API_URL + 'users/' + process.env.INSTAGRAM_USER_ID + 
             '/media/recent/?count=' + count +
             '&access_token=' + process.env.INSTAGRAM_ACCESS_TOKEN;
 
@@ -157,7 +160,6 @@ exports.fetch = function(count, max_id, cb) {
         var cleanedPost = {
           'id': post.id,
           'date': createdDate.toISOString(),
-          'day': moment(createdDate).format('YYYY-MM-DD'),
           'type': 'instagram',
           'url': post.link,
           'video': post.videos && post.videos.standard_resolution ? post.videos.standard_resolution : null,
@@ -218,7 +220,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.INSTAGRAM_API_URL + 'users/' + 
+  var url = INSTAGRAM_API_URL + 'users/' + 
             process.env.INSTAGRAM_USER_ID + '?access_token=' + 
             process.env.INSTAGRAM_ACCESS_TOKEN;
 

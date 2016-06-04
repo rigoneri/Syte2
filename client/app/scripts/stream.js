@@ -54,21 +54,23 @@ angular.module('clientApp')
             for (var i=0; i<data.length; i++) {
               var post = data[i];
               post.date = moment(post.date).toDate();
-              if ($scope.groups[post.day]) {
-                $scope.groups[post.day].items.push(post);
+              var day = moment(post.date).format('YYYY-MM-DD');
+
+              if ($scope.groups[day]) {
+                $scope.groups[day].items.push(post);
               } else {
                 var title;
-                if (todayFormated === post.day) {
+                if (todayFormated === day) {
                   title = 'Today';
-                } else if (yesterdayFormatted === post.day) {
+                } else if (yesterdayFormatted === day) {
                   title = 'Yesterday';
-                } else if (currentYear !== post.day.substring(0, 4)){
-                  title = $filter('date')(moment(post.day).toDate(), 'EEEE, MMMM d, yyyy');
+                } else if (currentYear !== day.substring(0, 4)){
+                  title = $filter('date')(moment(day).toDate(), 'EEEE, MMMM d, yyyy');
                 } else {
-                  title = $filter('date')(moment(post.day).toDate(), 'EEEE, MMMM d');
+                  title = $filter('date')(moment(day).toDate(), 'EEEE, MMMM d');
                 }
 
-                $scope.groups[post.day] = {
+                $scope.groups[day] = {
                   title: title,
                   items: [post]
                 };

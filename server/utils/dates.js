@@ -9,6 +9,6 @@ exports.monthRange = function(page, cb) {
   var startDate = today.startOf('month');
   var endDate = moment(startDate).endOf('month');
   
-  cb(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+  cb(startDate.toISOString(), endDate.toISOString());
 };
 

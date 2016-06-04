@@ -3,6 +3,10 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
+var YOUTUBE_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token',
+    YOUTUBE_AUTH_REDIRECT_URL = 'http://localhost:3000/youtube/auth',
+    YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
+
 var youtubePosts = {};
 var lastUpdated;
 
@@ -15,7 +19,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, youtubePosts[start]);
         } else {
           db.collection('youtubedb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Youtube month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -30,7 +34,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, youtubePosts[start]);
       } else {
         db.collection('youtubedb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Youtube month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -160,7 +164,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, nextToken, cb) {
-  var url = process.env.YOUTUBE_API_URL + 'playlistItems?access_token=' +
+  var url = YOUTUBE_API_URL + 'playlistItems?access_token=' +
       process.env.YOUTUBE_ACCESS_TOKEN + '&part=snippet,status&maxResults=' + count +
       '&playlistId='+ process.env.YOUTUBE_PLAYLIST_ID;
 
@@ -183,7 +187,6 @@ exports.fetch = function(count, nextToken, cb) {
             var cleanedPost = {
               'id': post.resourceId.videoId,
               'date': createdDate.toISOString(),
-              'day': moment(createdDate).format('YYYY-MM-DD'),
               'type': 'youtube',
               'title': post.title,
               'description': linkifyText(post.description)
@@ -245,7 +248,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.YOUTUBE_API_URL + 'channels?access_token=' +
+  var url = YOUTUBE_API_URL + 'channels?access_token=' +
        process.env.YOUTUBE_ACCESS_TOKEN + '&part=brandingSettings,statistics,snippet&mine=true'
 
   request(url, function (error, response, body) {
@@ -293,20 +296,20 @@ exports.user = function(cb) {
 
 exports.getToken = function(code, cb) {
   request({
-    'url': process.env.YOUTUBE_TOKEN_URL,
+    'url': YOUTUBE_TOKEN_URL,
     'method': 'POST',
     'form': {
       'code': code,
       'grant_type': 'authorization_code',
       'client_id': process.env.YOUTUBE_CLIENT_ID,
       'client_secret': process.env.YOUTUBE_CLIENT_SECRET,
-      'redirect_uri': process.env.YOUTUBE_AUTH_REDIRECT_URL
+      'redirect_uri': YOUTUBE_AUTH_REDIRECT_URL
     }
   }, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
       if (body.access_token) {
-        var url = process.env.YOUTUBE_API_URL + 'channels?access_token=' +
+        var url = YOUTUBE_API_URL + 'channels?access_token=' +
           body.access_token + '&part=contentDetails&mine=true';
 
         request(url, function (error, response, channelsBody) {
@@ -332,7 +335,7 @@ exports.getToken = function(code, cb) {
 
 exports.refreshToken = function(cb) {
   request({
-      'url': process.env.YOUTUBE_TOKEN_URL,
+      'url': YOUTUBE_TOKEN_URL,
       'method': 'POST',
       'form': {
         'grant_type': 'refresh_token',

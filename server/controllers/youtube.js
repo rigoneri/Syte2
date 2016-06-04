@@ -3,6 +3,9 @@ var express = require('express'),
     request = require('request'),
     YouTube = require('../models/youtube');
 
+var YOUTUBE_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth',
+    YOUTUBE_AUTH_REDIRECT_URL = 'http://localhost:3000/youtube/auth';
+
 router.get('/', function(req, res) {
   YouTube.monthActvity(0, function(error, data) {
     if (!error) {
@@ -23,10 +26,9 @@ router.get('/auth', function(req, res) {
       res.status(200).json(response);
     });
   } else {
-    var url = process.env.YOUTUBE_AUTH_URL + 
-      '?client_id=' + process.env.YOUTUBE_CLIENT_ID +
-      '&redirect_uri=' + process.env.YOUTUBE_AUTH_REDIRECT_URL +
-      '&scope=https://www.googleapis.com/auth/youtube&response_type=code&access_type=offline&approval_prompt=force';
+    var url = YOUTUBE_AUTH_URL + '?client_id=' + process.env.YOUTUBE_CLIENT_ID +
+        '&redirect_uri=' + YOUTUBE_AUTH_REDIRECT_URL +
+        '&scope=https://www.googleapis.com/auth/youtube&response_type=code&access_type=offline&approval_prompt=force';
     res.redirect(url);
   }
 });

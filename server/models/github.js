@@ -4,6 +4,8 @@ var request = require('request'),
       dates = require('../utils/dates'),
    markdown = require( "markdown" ).markdown;
 
+var GITHUB_API_URL = 'https://api.github.com/';
+
 var githubPosts = {};
 var lastUpdated;
 
@@ -16,7 +18,7 @@ exports.monthActvity = function(page, cb) {
           cb(null, githubPosts[start]);
         } else {
           db.collection('githubdb').find({
-            'day': { $gte: start, $lte: end }
+            'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Github month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
@@ -34,7 +36,7 @@ exports.monthActvity = function(page, cb) {
         cb(null, githubPosts[start]);
       } else {
         db.collection('githubdb').find({
-          'day': { $gte: start, $lte: end }
+          'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
           console.log('Github month:', start,' got from db: ',  posts.length);
           if (!err && posts.length) {
@@ -55,8 +57,9 @@ function _groupCommits(posts) {
 
   for (var i=0; i<posts.length; i++) {
     var post = posts[i];
-    if (groups[post.day]) {
-      var group = groups[post.day];
+    var day = moment(post.date).format('YYYY-MM-DD');
+    if (groups[day]) {
+      var group = groups[day];
       if (group[post.repo_id]) {
         group[post.repo_id].commits += post.commits;
       } else {
@@ -65,7 +68,7 @@ function _groupCommits(posts) {
     } else {
       var group = {};
       group[post.repo_id] = post;
-      groups[post.day] =group;
+      groups[day] = group;
     }
   }
 
@@ -161,7 +164,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(page, cb) { 
-  var url = process.env.GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+ 
             process.env.GITHUB_USERNAME + '/events?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 
@@ -186,7 +189,6 @@ exports.fetch = function(page, cb) {
           var cleanedPost = {
             'id': post.id,
             'date': createdDate.toISOString(),
-            'day': moment(createdDate).format('YYYY-MM-DD'),
             'type': 'github'
           };
 
@@ -230,7 +232,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = process.env.GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+ 
             process.env.GITHUB_USERNAME + '?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 
@@ -280,7 +282,7 @@ exports.repos = function(cb) {
     return;
   }
 
-  var url = process.env.GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+ 
             process.env.GITHUB_USERNAME + '/repos?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN + '&sort=updated';
 
@@ -339,7 +341,7 @@ exports.recentActivity = function(cb) {
     return;
   }
 
-  var url = process.env.GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+ 
             process.env.GITHUB_USERNAME + '/events/public?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 
