@@ -1,6 +1,7 @@
 
 TZ = 'America/Chicago'
 MONGODB_URI = ''
+STREAM_SETUP_ENABLED = true
 
 TWITTER_USERNAME = ''
 TWITTER_CONSUMER_KEY = ''

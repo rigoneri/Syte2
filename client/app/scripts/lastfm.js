@@ -140,6 +140,6 @@ angular.module('clientApp')
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/lastfm.html'
+      templateUrl: 'templates/lastfm/activity.html'
     };
   });

@@ -93,12 +93,12 @@ angular.module('clientApp')
   ])
 
 
-  .directive('githubStreamActivity', function() {
+  .directive('githubActivity', function() {
     return {
       restrict: 'E',
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/github.html'
+      templateUrl: 'templates/github/activity.html'
     };
   });

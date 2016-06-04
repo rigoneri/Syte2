@@ -177,28 +177,6 @@ angular.module('clientApp')
     };
   }])
 
-  .directive('twitterStreamPost', ['ModalService', function(ModalService) {
-    return {
-      restrict: 'E',
-      scope: {
-        item: '='
-      },
-      templateUrl: 'templates/stream/twitter.html',
-      link: function(scope) {
-        scope.openPost = function(item, index) {
-          ModalService.showModal({
-            templateUrl: 'templates/twitter/details.html',
-            controller: 'TwitterDetailsCtrl',
-            inputs: {
-              item: item,
-              idx: index
-            }
-          });
-        };
-      }
-    };
-  }])
-
   .controller('TwitterDetailsCtrl', ['$scope', 'close', 'item', 'idx',
     function($scope, close, item, idx) {
       $scope.close = close;

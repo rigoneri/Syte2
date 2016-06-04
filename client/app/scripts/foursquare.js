@@ -377,12 +377,12 @@ angular.module('clientApp')
     }
   ])
 
-  .directive('foursquareStreamPost', function() {
+  .directive('foursquareCheckin', function() {
     return {
       restrict: 'E',
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/foursquare.html'
+      templateUrl: 'templates/foursquare/checkin.html'
     };
   });

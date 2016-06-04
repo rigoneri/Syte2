@@ -4,12 +4,12 @@
     <h2 class="day-title">{{ group.title }}</h2>
     <ul>
       <li ng-repeat="item in group.items" class="{{ item.type }}">
-        <twitter-stream-post item="item" ng-if="item.type == 'twitter'"></twitter-stream-post>
-        <instagram-stream-post item="item" ng-if="item.type == 'instagram'"></instagram-stream-post>
-        <foursquare-stream-post item="item" ng-if="item.type == 'foursquare'"></foursquare-stream-post>
-        <dribbble-stream-post item="item" ng-if="item.type == 'dribbble'"></dribbble-stream-post>
-        <tumblr-stream-post item="item" ng-if="item.type == 'tumblr'"></tumblr-stream-post>
-        <github-stream-activity item="item" ng-if="item.type == 'github'"></github-stream-activity>
+        <twitter-post item="item" ng-if="item.type == 'twitter'"></twitter-post>
+        <instagram-post item="item" ng-if="item.type == 'instagram'"></instagram-post>
+        <foursquare-checkin item="item" ng-if="item.type == 'foursquare'"></foursquare-checkin>
+        <dribbble-post item="item" ng-if="item.type == 'dribbble'"></dribbble-post>
+        <tumblr-post item="item" ng-if="item.type == 'tumblr'"></tumblr-post>
+        <github-activity item="item" ng-if="item.type == 'github'"></github-activity>
         <lastfm-activity item="item" ng-if="item.type == 'lastfm'"></lastfm-activity>
         <youtube-post item="item" ng-if="item.type == 'youtube'"></youtube-post>
       </li>

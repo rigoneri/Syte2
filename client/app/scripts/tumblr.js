@@ -1,3 +1,4 @@
+/*jshint sub:true*/
 'use strict';
 
 angular.module('clientApp')
@@ -53,6 +54,8 @@ angular.module('clientApp')
               var post = data[i];
               if (post.player) {
                 post.player = $sce.trustAsHtml(post.player);
+              } else if (post['post_type'] === 'text') {
+                post.body = $sce.trustAsHtml(post.body);
               }
 
               $scope.posts.push(post);
@@ -119,13 +122,13 @@ angular.module('clientApp')
     }
   ])
 
-  .directive('tumblrStreamPost', ['$sce', 'ModalService', function($sce, ModalService) {
+  .directive('tumblrPost', ['$sce', 'ModalService', function($sce, ModalService) {
     return {
       restrict: 'E',
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/tumblr.html',
+      templateUrl: 'templates/tumblr/post.html',
       link: function(scope) {
         if (scope.item.player) {
           scope.item.player = $sce.trustAsHtml(scope.item.player);

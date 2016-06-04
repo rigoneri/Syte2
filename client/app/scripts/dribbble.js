@@ -152,13 +152,13 @@ angular.module('clientApp')
     }
   ])
 
-  .directive('dribbbleStreamPost', ['$window', 'ModalService', function($window, ModalService) {
+  .directive('dribbblePost', ['$window', 'ModalService', function($window, ModalService) {
     return {
       restrict: 'E',
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/dribbble.html',
+      templateUrl: 'templates/dribbble/post.html',
       link: function(scope) {
         scope.openPost = function(item) {
           ModalService.showModal({

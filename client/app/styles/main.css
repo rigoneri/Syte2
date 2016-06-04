@@ -2907,6 +2907,9 @@ h4,
 .tumblr-page:after {
   clear: both;
 }
+.tumblr-page iframe {
+  display: block;
+}
 .tumblr-page .post {
   padding: 40px 100px 20px 0;
   border-top: 1px solid #263435;

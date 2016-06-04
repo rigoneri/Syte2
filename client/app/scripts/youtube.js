@@ -158,7 +158,7 @@ angular.module('clientApp')
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/youtube.html',
+      templateUrl: 'templates/youtube/post.html',
       link: function(scope) {
         scope.openPost = function(item) {
           ModalService.showModal({

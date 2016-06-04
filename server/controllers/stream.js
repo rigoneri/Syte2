@@ -12,8 +12,12 @@ var express = require('express'),
 
 var streamPosts;
 
-//TODO remove this later..
 router.get('/setup', function(req, res) {
+  if (process.env.STREAM_SETUP_ENABLED == 'false') {
+    res.status(404).send('Not found');
+    return;
+  }
+
   async.series([
     function(cb) {
       Twitter.setup(cb);

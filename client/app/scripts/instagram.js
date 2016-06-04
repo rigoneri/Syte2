@@ -157,13 +157,13 @@ angular.module('clientApp')
     }
   ])
 
-  .directive('instagramStreamPost', ['$window', 'ModalService', function($window, ModalService) {
+  .directive('instagramPost', ['$window', 'ModalService', function($window, ModalService) {
     return {
       restrict: 'E',
       scope: {
         item: '='
       },
-      templateUrl: 'templates/stream/instagram.html',
+      templateUrl: 'templates/instagram/post.html',
       link: function(scope) {
         scope.openPost = function(item) {
           ModalService.showModal({
