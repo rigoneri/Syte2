@@ -11,8 +11,4 @@ router.use('/github', require('./github'));
 router.use('/lastfm', require('./lastfm'));
 router.use('/youtube', require('./youtube'));
 
-// router.get('/', function(req, res) {
-//   res.render('index')
-// })
-
 module.exports = router;

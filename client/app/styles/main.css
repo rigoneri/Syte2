@@ -2019,7 +2019,7 @@ h4,
   height: 100%;
   position: absolute;
   top: 0;
-  background-color: #182125;
+  background-color: rgba(0, 0, 0, 0.8);
   pointer-events: none;
   z-index: 2;
   opacity: 0;
@@ -2282,7 +2282,7 @@ h4,
   height: 100%;
   position: absolute;
   top: 0;
-  background-color: #182125;
+  background-color: rgba(0, 0, 0, 0.8);
   pointer-events: none;
   z-index: 2;
   opacity: 0;
