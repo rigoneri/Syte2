@@ -8,6 +8,7 @@ var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    foursquareCheckins[start] = null;
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
@@ -78,7 +79,7 @@ exports.update = function(cb) {
         }
       }); 
     } else {
-       console.log('Foursquare !needUpdate');
+      console.log('Foursquare !needUpdate');
       cb(false);  
     }
   });
