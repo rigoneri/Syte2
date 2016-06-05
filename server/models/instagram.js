@@ -3,10 +3,7 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
-var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/',
-    INSTAGRAM_OAUTH_AUTHORIZE_URL = 'https://api.instagram.com/oauth/authorize',
-    INSTAGRAM_OAUTH_ACCESS_TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
-
+var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
 var instagramPosts = {};
 var lastUpdated;
 
@@ -235,6 +232,37 @@ exports.user = function(cb) {
       cb(null, instagramUser);
     } else {
       cb(error, null);
+    }
+  });
+};
+
+var INSTAGRAM_TOKEN_URL = 'https://api.instagram.com/oauth/access_token',
+    INSTAGRAM_AUTH_REDIRECT_URL = 'http://localhost:3000/instagram/auth';
+
+exports.getToken = function(code, cb) {
+  request({
+    'url': INSTAGRAM_TOKEN_URL,
+    'method': 'POST',
+    'form': {
+      'client_id': process.env.INSTAGRAM_CLIENT_ID,
+      'client_secret': process.env.INSTAGRAM_CLIENT_SECRET,
+      'grant_type': 'authorization_code',
+      'redirect_uri': INSTAGRAM_AUTH_REDIRECT_URL,
+      'code': code
+    }
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      body = JSON.parse(body);
+      if (body.access_token) {
+        cb({
+          'access_token': body.access_token,
+          'user_id': body.user.id
+        });
+      } else {
+        cb(body);
+      }
+    } else {
+      cb(body);
     }
   });
 };

@@ -603,3 +603,24 @@ function _parseActivity(activity) {
   return null;
 }
 
+var GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token',
+    GITHUB_AUTH_REDIRECT_URL = 'http://localhost:3000/github/auth';
+
+exports.getToken = function(code, cb) {
+  request({
+    'url': GITHUB_TOKEN_URL,
+    'method': 'POST',
+    'json': {
+      'code': code,
+      'client_id': process.env.GITHUB_CLIENT_ID,
+      'client_secret': process.env.GITHUB_CLIENT_SECRET,
+      'redirect_uri': GITHUB_AUTH_REDIRECT_URL
+    }
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      cb(body);
+    } else {
+      cb(body);
+    }
+  });
+};

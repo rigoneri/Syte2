@@ -3,10 +3,7 @@ var request = require('request'),
          db = require('../db'),
       dates = require('../utils/dates');
 
-var YOUTUBE_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token',
-    YOUTUBE_AUTH_REDIRECT_URL = 'http://localhost:3000/youtube/auth',
-    YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
-
+var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
 var youtubePosts = {};
 var lastUpdated;
 
@@ -293,6 +290,9 @@ exports.user = function(cb) {
     }
   });
 };
+
+var YOUTUBE_TOKEN_URL = 'https://accounts.google.com/o/oauth2/token',
+    YOUTUBE_AUTH_REDIRECT_URL = 'http://localhost:3000/youtube/auth';
 
 exports.getToken = function(code, cb) {
   request({

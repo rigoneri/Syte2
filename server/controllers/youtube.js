@@ -1,5 +1,5 @@
 var express = require('express'),
-     router = express.Router(),
+    router = express.Router(),
     request = require('request'),
     YouTube = require('../models/youtube');
 
