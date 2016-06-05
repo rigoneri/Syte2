@@ -22,6 +22,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Lastfm month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              lastfmTracks = {};
               lastfmTracks[start] = posts;
             }
             cb(err, posts);
@@ -260,54 +261,54 @@ exports.fetch = function(count, page, cb, from) {
 };
 
 function _cleanFetchResponse(recentTracks) {
-    var tracks = [];
+  var tracks = [];
 
-    for (var i = 0; i < recentTracks.length; i++) {
-      var track = recentTracks[i];
-      if (!track.date) //now playing...
-        continue;
+  for (var i = 0; i < recentTracks.length; i++) {
+    var track = recentTracks[i];
+    if (!track.date) //now playing...
+      continue;
 
-      var createdDate = moment(new Date(parseInt(track.date.uts) * 1000));
-      var cleanedTrack = {
-        'day': moment(createdDate).format('YYYY-MM-DD'),
-        'date': createdDate.toISOString(),
-        'title': track.name,
-        'plays': 1
-      };
+    var createdDate = moment(new Date(parseInt(track.date.uts) * 1000));
+    var cleanedTrack = {
+      'day': moment(createdDate).format('YYYY-MM-DD'),
+      'date': createdDate.toISOString(),
+      'title': track.name,
+      'plays': 1
+    };
 
-      if (track.url) {
-        cleanedTrack.url = track.url;
+    if (track.url) {
+      cleanedTrack.url = track.url;
+    }
+
+    if (track.image) {
+      for(var g=0; g<track.image.length; g++) {
+        var ig = track.image[g];
+        if (ig.size == 'medium' && ig['#text']) {
+          cleanedTrack.image = ig['#text'];
+        }
+      }
+    }
+
+    if (track.artist) {
+      cleanedTrack.artist = track.artist.name;
+      if (!cleanedTrack.url && track.artist.url) {
+        cleanedTrack.url = track.artist.url;
       }
 
-      if (track.image) {
-        for(var g=0; g<track.image.length; g++) {
-          var ig = track.image[g];
+      if (!cleanedTrack.image && track.artist.image) {
+        for(var g=0; g<track.artist.length; g++) {
+          var ig = track.artist[g];
           if (ig.size == 'medium' && ig['#text']) {
             cleanedTrack.image = ig['#text'];
           }
         }
       }
-
-      if (track.artist) {
-        cleanedTrack.artist = track.artist.name;
-        if (!cleanedTrack.url && track.artist.url) {
-          cleanedTrack.url = track.artist.url;
-        }
-
-        if (!cleanedTrack.image && track.artist.image) {
-          for(var g=0; g<track.artist.length; g++) {
-            var ig = track.artist[g];
-            if (ig.size == 'medium' && ig['#text']) {
-              cleanedTrack.image = ig['#text'];
-            }
-          }
-        }
-      }
-
-      tracks.push(cleanedTrack);
     }
 
-    return tracks;
+    tracks.push(cleanedTrack);
+  }
+
+  return tracks;
 }
 
 var lastfmUser;

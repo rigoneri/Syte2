@@ -21,6 +21,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Twitter month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              twitterPosts = {};
               twitterPosts[start] = posts;
             }
             cb(err, posts);

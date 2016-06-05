@@ -21,6 +21,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Tumblr month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              tumblrPosts = {};
               tumblrPosts[start] = posts;
             }
             cb(err, posts);
@@ -48,30 +49,30 @@ exports.monthActvity = function(page, cb) {
 var allPosts = [];
 var limit = 3;
 exports.recentActivity = function(page, cb) {
-    var start = page * limit;
-    var end = start + limit;
-    
-    if (allPosts.slice(start, end).length) {
-      var pagePosts = allPosts.slice(start, end);
-      cb(null, pagePosts);
-      return;
-    }
+  var start = page * limit;
+  var end = start + limit;
+  
+  if (allPosts.slice(start, end).length) {
+    var pagePosts = allPosts.slice(start, end);
+    cb(null, pagePosts);
+    return;
+  }
 
-    var query = {};
-    if (allPosts.length > 0) {
-      var lastPost = allPosts[allPosts.length -1];
-      query = {'date' : { $lt: lastPost.date }};
-    }
+  var query = {};
+  if (allPosts.length > 0) {
+    var lastPost = allPosts[allPosts.length -1];
+    query = {'date' : { $lt: lastPost.date }};
+  }
 
-    db.collection('tumblrdb').find(query)
-      .limit(limit).sort({'date': -1}).toArray(function (err, posts) {
-      if (!err && posts.length) {
-        allPosts = allPosts.concat(posts);
-        cb(null, posts);
-      } else {
-        cb(err, []);
-      }
-    });
+  db.collection('tumblrdb').find(query)
+    .limit(limit).sort({'date': -1}).toArray(function (err, posts) {
+    if (!err && posts.length) {
+      allPosts = allPosts.concat(posts);
+      cb(null, posts);
+    } else {
+      cb(err, []);
+    }
+  });
 };
 
 exports.update = function(cb) {

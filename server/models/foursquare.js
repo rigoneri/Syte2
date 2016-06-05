@@ -20,6 +20,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Foursquare month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              foursquareCheckins = {};
               foursquareCheckins[start] = posts;
             }
             cb(err, posts);

@@ -22,6 +22,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Github month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              githubPosts = {};
               var groupedCommits =_groupCommits(posts);
               githubPosts[start] = groupedCommits;
               cb(err, groupedCommits);

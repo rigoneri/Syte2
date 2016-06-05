@@ -20,6 +20,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Instagram month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
+              instagramPosts = {};
               instagramPosts[start] = posts;
             }
             cb(err, posts);
