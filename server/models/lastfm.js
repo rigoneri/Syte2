@@ -9,6 +9,11 @@ var LASTFM_API_URL = 'http://ws.audioscrobbler.com/2.0/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.LASTFM_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'lastfm-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -129,6 +134,11 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
+  if (process.env.LASTFM_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   //Gets most of the users tracks (up to 300?!) and saves to the db...
   var page = 1;
   var groups = {};

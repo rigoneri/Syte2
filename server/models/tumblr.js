@@ -8,6 +8,11 @@ var TUMBLR_API_URL = 'http://api.tumblr.com/v2/blog/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.TUMBLR_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'tumblr-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -134,6 +139,11 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
+  if (process.env.TUMBLR_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+  
   //Gets most of the users posts (up to 300?!) and saves to the db...
   var offset = 0;
   var count = 0;

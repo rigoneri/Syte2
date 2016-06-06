@@ -8,6 +8,11 @@ var FOURSQUARE_API_URL = 'https://api.foursquare.com/v2/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.FOURSQUARE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'foursquare-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -90,6 +95,11 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
+  if (process.env.FOURSQUARE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   //Gets most of the users checkins (up to 300?!) and saves to the db...
   var offset = 0;
   var count = 0;

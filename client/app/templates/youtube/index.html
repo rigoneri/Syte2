@@ -1,5 +1,5 @@
 <div class="youtube-page" id="youtube-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.id">
     <div ng-if="user.banner" class="banner" src="images/placeholder.png" lazy-img="{{ user.banner }}"></div>  
     <a href="{{ user.url }}" class="picture" target="_blank">
       <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />

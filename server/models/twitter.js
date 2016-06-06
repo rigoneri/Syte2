@@ -7,6 +7,11 @@ var Twitter = require('twitter'),
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.TWITTER_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'twitter-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -138,6 +143,11 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
+  if (process.env.TWITTER_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+  
   //Gets most of the users tweets (up to 300?!) and saves to the db...
   var max_id = null;
   var count = 0;

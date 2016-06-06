@@ -1,5 +1,5 @@
 <div class="foursquare-page" id="foursquare-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.id">
     <a href="{{ user.url }}" class="picture" target="_blank">
       <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
     </a>
@@ -29,7 +29,7 @@
     </ul>
   </div>
   <div class="checkin-stats" ng-class="{'animate-hide': animateHide, 'animate-between': animateBetween, 'animate-show': animateShow}">
-    <div class="map-title">
+    <div class="map-title" ng-if="monthTitleDate">
       <h2 class="title" ng-if="monthTitleDate">{{ monthTitleDate }}</h2>
       <span class="total-count">{{ totalCheckins }} Check-ins</span>
       <span class="icon left" ng-click="previousMonth()"></span>
@@ -40,11 +40,11 @@
       <div class="markers">
         <div ng-repeat="item in mapData" ng-style="{'top': item.y + 'px', 'left': item.x + 'px'}" class="marker">
           <div class="circle"></div>
-          <div class="text">{{ item.title}}</div>
+          <div class="text">{{ item.title }}</div>
         </div>
       </div>
     </div>
-    <ul class="foursquare-categories">
+    <ul class="foursquare-categories" ng-if="mapCategories && mapCategories.length">
       <li ng-repeat="category in mapCategories | limitTo:8">
         <div class="category-icon">
           <img src="images/placeholder.png" ng-if="category.icon" lazy-img="{{ category.icon }}"/>

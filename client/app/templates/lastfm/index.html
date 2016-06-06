@@ -1,5 +1,5 @@
 <div class="lastfm-page" id="lastfm-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.name">
     <a href="{{ user.url }}" class="picture" target="_blank">
       <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
     </a>

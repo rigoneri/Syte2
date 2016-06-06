@@ -8,6 +8,11 @@ var DRIBBBLE_API_URL = 'https://api.dribbble.com/v1/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.DRIBBBLE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'dribbble-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -154,6 +159,11 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
+  if (process.env.DRIBBBLE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   //Gets most of the users dribbble posts and saves to the db...
   var page = 1;
 

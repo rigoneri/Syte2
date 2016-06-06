@@ -8,6 +8,11 @@ var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.YOUTUBE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'youtube-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -135,8 +140,12 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
-  //Gets most of the users youtube posts (up to 150?!) and saves to the db...
+  if (process.env.YOUTUBE_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
 
+  //Gets most of the users youtube posts (up to 150?!) and saves to the db...
   var nextToken = null;
   var count = 0;
 

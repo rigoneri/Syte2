@@ -95,6 +95,8 @@ angular.module('clientApp')
             if (emptyResponses <= 2) {
               currentPage++;
               _getStream(cb);
+            } else {
+              cb();
             }
           }
         }).error(function(data) {

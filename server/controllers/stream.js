@@ -13,7 +13,7 @@ var express = require('express'),
 var streamPosts;
 
 router.get('/setup', function(req, res) {
-  if (process.env.STREAM_SETUP_ENABLED == 'false') {
+  if (process.env.STREAM_SETUP_ENABLED != 'true') {
     res.status(404).send('Not found');
     return;
   }

@@ -1,5 +1,5 @@
 <div class="github-page" id="github-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.id">
     <a href="{{ user.url }}" class="picture" target="_blank">
       <img ng-if="user.picture" src="images/placeholder.png" lazy-img="{{ user.picture }}" />
     </a>
@@ -23,7 +23,7 @@
       </li>
     </ul>
   </div>
-  <div class="activities">
+  <div class="activities" ng-if="activities && activities.length">
     <h2>Recent Activity</h2>
     <ul>
       <li ng-repeat="activity in activities" class="activity">

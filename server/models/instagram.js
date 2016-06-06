@@ -8,6 +8,11 @@ var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
+  if (process.env.INSTAGRAM_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
   dates.monthRange(page, function(start, end) {
     var cacheKey = 'instagram-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
@@ -90,7 +95,10 @@ exports.update = function(cb) {
 };
 
 exports.setup = function(cb) {
-  //Gets most of the users instagram posts (up to 150?!) and saves to the db...
+  if (process.env.INSTAGRAM_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
 
   var max_id = null;
   var count = 0;

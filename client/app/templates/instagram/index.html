@@ -1,5 +1,5 @@
 <div class="instagram-page" id="instagram-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.id">
     <a href="{{ user.url }}" class="picture" target="_blank">
       <img ng-if="user.profile_picture" src="images/placeholder.png" lazy-img="{{ user.profile_picture }}" />
     </a>
@@ -26,6 +26,6 @@
       <li>
     </li>
   </div>
-  <a href="{{ user.url }}" target="_blank" class="button">See more on Instagram...</a>
+  <a href="{{ user.url }}" target="_blank" class="button" ng-if="user.id">See more on Instagram...</a>
 </div>
 <div class="loading-view" ng-class="{'hidden': visible }"><span>Loading...</span></div>

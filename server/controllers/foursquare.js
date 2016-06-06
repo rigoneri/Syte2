@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/auth', function(req, res) {
-  if (process.env.FOURSQUARE_OAUTH_ENABLED == 'false') {
+  if (process.env.FOURSQUARE_OAUTH_ENABLED != 'true') {
     res.status(404).send('Not found');
     return;
   }

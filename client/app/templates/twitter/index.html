@@ -1,5 +1,5 @@
 <div class="twitter-page" id="twitter-page" ng-class="{'animate-enter': animateEnter, 'visible': visible}">
-  <div class="user">
+  <div class="user" ng-if="user.id">
     <div ng-if="user.banner" class="banner" src="images/placeholder.png" lazy-img="{{ user.banner }}"></div>
     <div class="over-shadow"></div>
     <a href="{{ user.url }}" class="picture" target="_blank">
@@ -18,7 +18,7 @@
       <div ng-repeat="picture in user.pictures | limitTo:4" class="photo" lazy-img="{{picture.url}}" ng-click="openPicture(picture)"></div>
     </div>
   </div>
-  <div class="tweets">
+  <div class="tweets" ng-if="tweets && tweets.length">
     <h2>Recent Tweets</h2>
     <ul>
       <li ng-repeat="item in tweets" class="tweet">
