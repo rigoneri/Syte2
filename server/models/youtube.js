@@ -21,7 +21,7 @@ exports.monthActvity = function(page, cb) {
           db.collection('youtubedb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Youtube month:', start,' got from db: ',  posts.length);
+            console.log('Youtube page', page, 'used db:', posts.length);
             if (!err && posts.length) {
               cache.put(cacheKey, posts);
             }
