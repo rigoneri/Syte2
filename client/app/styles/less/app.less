@@ -154,6 +154,21 @@
   }
 }
 
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  background: @dark-bg-color;
+  color: @text-color-strong;
+  .transition(e('all 320ms ease-out'));
+
+  &:hover {
+    background: @link-color;
+    color: @bg-color;
+    .transform(@transform:scale(1.04));
+  }
+}
+
 @media (max-width: 1035px) {
 
   .main-header {

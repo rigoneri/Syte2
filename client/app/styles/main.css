@@ -1084,6 +1084,23 @@ h4,
   padding: 0 40px;
   opacity: 0.6;
 }
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  background: #182125;
+  color: #fff;
+  -webkit-transition: all 320ms ease-out;
+  transition: all 320ms ease-out;
+}
+.button:hover {
+  background: #79d4d5;
+  color: #202a2f;
+  -webkit-transform: scale(1.04);
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  transform: scale(1.04);
+}
 @media (max-width: 1035px) {
   .main-header {
     width: 50px;

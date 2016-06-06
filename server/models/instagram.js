@@ -135,8 +135,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, max_id, cb) {
-  var url = INSTAGRAM_API_URL + 'users/' + process.env.INSTAGRAM_USER_ID + 
-            '/media/recent/?count=' + count +
+  var url = INSTAGRAM_API_URL + 'users/self/media/recent/?count=' + count +
             '&access_token=' + process.env.INSTAGRAM_ACCESS_TOKEN;
 
   if (max_id) {
@@ -180,7 +179,7 @@ exports.fetch = function(count, max_id, cb) {
 
       cb(null, posts, next_max_id);
     } else {
-      cb(error, []);
+      cb(error, [], null);
     }
   });
 
@@ -220,8 +219,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = INSTAGRAM_API_URL + 'users/' + 
-            process.env.INSTAGRAM_USER_ID + '?access_token=' + 
+  var url = INSTAGRAM_API_URL + 'users/self?access_token=' + 
             process.env.INSTAGRAM_ACCESS_TOKEN;
 
   request(url, function (error, response, body) {
@@ -256,10 +254,7 @@ exports.getToken = function(code, cb) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
       if (body.access_token) {
-        cb({
-          'access_token': body.access_token,
-          'user_id': body.user.id
-        });
+        cb({'access_token': body.access_token});
       } else {
         cb(body);
       }
