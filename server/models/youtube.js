@@ -1,42 +1,46 @@
 var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
-      dates = require('../utils/dates');
+      dates = require('../utils/dates'),
+      cache = require('memory-cache');
 
 var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
-var youtubePosts = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'youtube-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && youtubePosts[start]) {
-          cb(null, youtubePosts[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Youtube page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('youtubedb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Youtube month:', start,' got from db: ',  posts.length);
             if (!err && posts.length) {
-              youtubePosts = {};
-              youtubePosts[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (youtubePosts[start]) {
-        cb(null, youtubePosts[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Youtube page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('youtubedb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Youtube month:', start,' got from db: ',  posts.length);
+          console.log('Youtube page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            youtubePosts[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -45,9 +49,23 @@ exports.monthActvity = function(page, cb) {
   });
 };
 
+var lastUpdatedRecentActivity;
 var allPosts = [];
 var limit = 10;
+
 exports.recentActivity = function(page, cb) {
+  var needUpdate = true;
+  if (lastUpdatedRecentActivity) {
+    var minutes = moment().diff(lastUpdatedRecentActivity, 'minutes');
+    if (minutes < process.env.YOUTUBE_UPDATE_FREQ_MINUTES) {
+      needUpdate = false;
+    }
+  }
+
+  var query = {};
+  if (needUpdate && page == 0) {
+    allPosts = [];
+  } else {
     var start = page * limit;
     var end = start + limit;
     
@@ -57,21 +75,23 @@ exports.recentActivity = function(page, cb) {
       return;
     }
 
-    var query = {};
+    
     if (allPosts.length > 0) {
       var lastPost = allPosts[allPosts.length -1];
       query = {'date' : { $lt: lastPost.date }};
     }
+  }
 
-    db.collection('youtubedb').find(query)
-      .limit(limit).sort({'date': -1}).toArray(function (err, posts) {
-      if (!err && posts.length) {
-        allPosts = allPosts.concat(posts);
-        cb(null, posts);
-      } else {
-        cb(err, []);
-      }
-    });
+  db.collection('youtubedb').find(query)
+    .limit(limit).sort({'date': -1}).toArray(function (err, posts) {
+    if (!err && posts.length) {
+      allPosts = allPosts.concat(posts);
+      lastUpdatedRecentActivity = new Date();
+      cb(null, posts);
+    } else {
+      cb(err, []);
+    }
+  });
 };
 
 exports.update = function(cb) {
@@ -79,15 +99,15 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Youtube next update in', process.env.YOUTUBE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.YOUTUBE_UPDATE_FREQ_MINUTES) {
+        console.log('Youtube next update in', process.env.YOUTUBE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     } 
 
     if (needUpdate) {
       exports.fetch(3, null, function(err, posts) {
-        console.log('Youtube needUpdate && fetch:', posts.length);
+        console.log('Youtube needed update and fetched:', posts.length);
         if (!err) {
           var bulk = db.collection('youtubedb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
@@ -109,7 +129,6 @@ exports.update = function(cb) {
         }
       }); 
     } else {
-      console.log('Youtube !needUpdate');
       cb(false);
     }
   });
@@ -122,9 +141,8 @@ exports.setup = function(cb) {
   var count = 0;
 
   function _fetchAndSave(fetchCallback) {
-    console.log('Youtube _fetchAndSave, count: ', count, ' nextToken: ', nextToken);
     exports.fetch(50, nextToken, function(err, posts, nextPageToken) {
-      console.log('Youtube _fetchAndSave, count: ', count, ' length: ', posts.length);
+      console.log('Youtube setup, page:', count, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('youtubedb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {
@@ -229,7 +247,6 @@ exports.fetch = function(count, nextToken, cb) {
   }
 };
 
-var youtubeUser;
 var lastUpdatedUser;
 
 exports.user = function(cb) {
@@ -241,8 +258,9 @@ exports.user = function(cb) {
     }
   }
 
-  if (!needUpdate && youtubeUser) {
-    cb(null, youtubeUser);
+  var cachedUser = cache.get('youtube-user');
+  if (!needUpdate && cachedUser) {
+    cb(null, cachedUser);
     return;
   }
 
@@ -254,7 +272,7 @@ exports.user = function(cb) {
       body = JSON.parse(body);
       if (body.items) {
         body = body.items[0];
-        youtubeUser = {
+        var youtubeUser = {
           'id': body.id,
           'name': body.snippet.title,
           'url': 'https://www.youtube.com/channel/' + body.id
@@ -272,8 +290,8 @@ exports.user = function(cb) {
           youtubeUser.banner = body.brandingSettings.image.bannerTabletLowImageUrl;
         }
 
+        cache.put('youtube-user', youtubeUser);
         lastUpdatedUser = new Date();
-
         cb(null, youtubeUser);
       } else {
         cb(null, response);

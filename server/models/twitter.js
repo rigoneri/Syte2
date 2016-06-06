@@ -1,44 +1,47 @@
 var Twitter = require('twitter'),
      moment = require('moment'),
          db = require('../db'),
-      dates = require('../utils/dates');
+      dates = require('../utils/dates'),
+      cache = require('memory-cache');
 
-var twitterPosts = {};
 var lastUpdated;
-var twitterUser;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'twitter-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && twitterPosts[start]) {
-          cb(null, twitterPosts[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Twitter page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('twitterdb').find({
             'date': { $gte: start, $lte: end },
             'type': 'twitter'
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Twitter month:', start,' got from db: ',  posts.length);
+            console.log('Twitter page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              twitterPosts = {};
-              twitterPosts[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (twitterPosts[start]) {
-        cb(null, twitterPosts[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Twitter page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('twitterdb').find({
           'date': { $gte: start, $lte: end },
           'type': 'twitter'
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Twitter month:', start,' got from db: ',  posts.length);
+          console.log('Twitter page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            twitterPosts[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -48,15 +51,16 @@ exports.monthActvity = function(page, cb) {
 };
 
 exports.user = function(cb) {
-  if (twitterUser) {
-    cb(null, twitterUser);
+  var cachedUser = cache.get('twitter-user');
+  if (cachedUser) {
+    cb(null, cachedUser);
   } else {
-     db.collection('twitterdb').findOne({'type': 'user'}, function(err, user) {;
-       if (user) {
-          twitterUser = user;
-       } 
-       cb(err, user);
-     });
+    db.collection('twitterdb').findOne({'type': 'user'}, function(err, user) {;
+      if (user) {
+        cache.put('twitter-user', user);
+      }
+      cb(err, user);
+    });
   }
 };
 
@@ -65,15 +69,15 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Twitter next update in', process.env.TWITTER_UPDATE_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.TWITTER_UPDATE_FREQ_MINUTES) {
+        console.log('Twitter next update in', process.env.TWITTER_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     }
 
     if (needUpdate) {
       exports.fetch(30, null, function(err, posts, userInfo, userPictures) {
-        console.log('Twitter needUpdate && fetch:', posts.length);
+        console.log('Twitter needed update and fetched:', posts.length);
         if (!err) {
           var bulk = db.collection('twitterdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
@@ -86,9 +90,10 @@ exports.update = function(cb) {
             if (!err) {
               lastUpdated = new Date();
 
-              if (twitterUser && userInfo && userPictures) {
+              var cachedUser = cache.get('twitter-user');
+              if (cachedUser && userInfo && userPictures) {
                 if (userPictures.length < 4) {
-                  var pictures = twitterUser.pictures || [];
+                  var pictures = cachedUser.pictures || [];
                   for (var p=0; p < pictures.length; p++) {
                     var picture = pictures[p];
                     var found = false;
@@ -111,7 +116,7 @@ exports.update = function(cb) {
                 }
 
                 userInfo.pictures = userPictures.slice(0, 4);
-                twitterUser = userInfo;
+                cache.put('twitter-user', userInfo);
                 db.collection('twitterdb').updateOne({'id': userInfo.id}, userInfo, {upsert: true}, function(err, results) {
                   cb(true);
                 });
@@ -127,7 +132,6 @@ exports.update = function(cb) {
         }
       });
     } else {
-      console.log('Twitter !needUpdate');
       cb(false);  
     }
   });
@@ -140,9 +144,8 @@ exports.setup = function(cb) {
   var user;
 
   function _fetchAndSave(fetchCallback) {
-    console.log('Twitter _fetchAndSave, count: ', count, ' max_id: ', max_id);
     exports.fetch(100, max_id, function(err, posts, userInfo, userPictures) {
-      console.log('Twitter _fetchAndSave, count: ', count, ' length: ', posts.length);
+      console.log('Twitter setup, page:', count, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var last_id = null;
         var bulk = db.collection('twitterdb').initializeUnorderedBulkOp();
@@ -182,7 +185,7 @@ exports.setup = function(cb) {
       }
       
       if (user) {
-        twitterUser = user;
+        cache.put('twitter-user', user);
         db.collection('twitterdb').updateOne({'id': user.id}, user, {upsert: true}, function(err, results) {
           exports.monthActvity(0, cb);
         });

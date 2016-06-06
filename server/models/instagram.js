@@ -1,42 +1,46 @@
 var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
-      dates = require('../utils/dates');
+      dates = require('../utils/dates'),
+      cache = require('memory-cache');
 
 var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
-var instagramPosts = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'instagram-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && instagramPosts[start]) {
-          cb(null, instagramPosts[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Instagram page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('instagramdb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Instagram month:', start,' got from db: ',  posts.length);
+            console.log('Instagram page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              instagramPosts = {};
-              instagramPosts[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (instagramPosts[start]) {
-        cb(null, instagramPosts[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Instagram page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('instagramdb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Instagram month:', start,' got from db: ',  posts.length);
+          console.log('Instagram page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            instagramPosts[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -49,16 +53,16 @@ exports.update = function(cb) {
   db.lastUpdatedDate(lastUpdated, 'instagram', function(date) {
     var needUpdate = true;
     if (date) {
-      var minutes = moment().diff(date, 'minutes');
-      console.log('Instagram next update in', process.env.INSTAGRAM_UPDATE_FREQ_MINUTES - minutes, 'minutes');
+      var minutes = moment().diff(date, 'minutes');      
       if (minutes < process.env.INSTAGRAM_UPDATE_FREQ_MINUTES) {
+        console.log('Instagram next update in', process.env.INSTAGRAM_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     } 
 
     if (needUpdate) {
       exports.fetch(10, null, function(err, posts) {
-        console.log('Instagram needUpdate && fetch:', posts.length);
+        console.log('Instagram needed update and fetched:', posts.length);
         if (!err) {
           var bulk = db.collection('instagramdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
@@ -79,8 +83,7 @@ exports.update = function(cb) {
           cb(false)
         }
       }); 
-    } else {
-      console.log('Instagram !needUpdate');
+    } else {      
       cb(false);
     }
   });
@@ -93,9 +96,8 @@ exports.setup = function(cb) {
   var count = 0;
 
   function _fetchAndSave(fetchCallback) {
-    console.log('Instagram _fetchAndSave, count: ', count, ' max_id: ', max_id);
     exports.fetch(50, max_id, function(err, posts, next_max_id) {
-      console.log('Instagram _fetchAndSave, count: ', count, ' length: ', posts.length);
+      console.log('Instagram setup, page:', count, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('instagramdb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {
@@ -201,7 +203,6 @@ exports.fetch = function(count, max_id, cb) {
   }
 };
 
-var instagramUser;
 var lastUpdatedUser;
 
 exports.user = function(cb) {
@@ -213,8 +214,9 @@ exports.user = function(cb) {
     }
   }
 
-  if (!needUpdate && instagramUser) {
-    cb(null, instagramUser);
+  var cachedUser = cache.get('instagram-user');
+  if (!needUpdate && cachedUser) {
+    cb(null, cachedUser);
     return;
   }
 
@@ -225,11 +227,10 @@ exports.user = function(cb) {
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
-      instagramUser = body.data;
+      var instagramUser = body.data;
       instagramUser.url = 'https://instagram.com/' + instagramUser.username;
-
+      cache.put('instagram-user', instagramUser);
       lastUpdatedUser = new Date();
-
       cb(null, instagramUser);
     } else {
       cb(error, null);

@@ -1,43 +1,46 @@
 var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
-      dates = require('../utils/dates');
+      dates = require('../utils/dates'),
+      cache = require('memory-cache');
 
 var TUMBLR_API_URL = 'http://api.tumblr.com/v2/blog/';
-
-var tumblrPosts = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'tumblr-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && tumblrPosts[start]) {
-          cb(null, tumblrPosts[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Tumblr page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('tumblrdb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Tumblr month:', start,' got from db: ',  posts.length);
+            console.log('Tumblr page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              tumblrPosts = {};
-              tumblrPosts[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (tumblrPosts[start]) {
-        cb(null, tumblrPosts[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Tumblr page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('tumblrdb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Tumblr month:', start,' got from db: ',  posts.length);
+          console.log('Tumblr page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            tumblrPosts[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -46,28 +49,43 @@ exports.monthActvity = function(page, cb) {
   });
 };
 
+var lastUpdatedRecentActivity;
 var allPosts = [];
 var limit = 3;
+
 exports.recentActivity = function(page, cb) {
-  var start = page * limit;
-  var end = start + limit;
-  
-  if (allPosts.slice(start, end).length) {
-    var pagePosts = allPosts.slice(start, end);
-    cb(null, pagePosts);
-    return;
+  var needUpdate = true;
+  if (lastUpdatedRecentActivity) {
+    var minutes = moment().diff(lastUpdatedRecentActivity, 'minutes');
+    if (minutes < process.env.TUMBLR_UPDATE_FREQ_MINUTES) {
+      needUpdate = false;
+    }
   }
 
   var query = {};
-  if (allPosts.length > 0) {
-    var lastPost = allPosts[allPosts.length -1];
-    query = {'date' : { $lt: lastPost.date }};
+  if (needUpdate && page == 0) {
+    allPosts = [];
+  } else {
+    var start = page * limit;
+    var end = start + limit;
+    
+    if (allPosts.slice(start, end).length) {
+      var pagePosts = allPosts.slice(start, end);
+      cb(null, pagePosts);
+      return;
+    }
+
+    if (allPosts.length > 0) {
+      var lastPost = allPosts[allPosts.length -1];
+      query = {'date' : { $lt: lastPost.date }};
+    }
   }
 
   db.collection('tumblrdb').find(query)
     .limit(limit).sort({'date': -1}).toArray(function (err, posts) {
     if (!err && posts.length) {
       allPosts = allPosts.concat(posts);
+      lastUpdatedRecentActivity = new Date();
       cb(null, posts);
     } else {
       cb(err, []);
@@ -80,15 +98,15 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Tumblr next update in', process.env.TUMBLR_UPDATE_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.TUMBLR_UPDATE_FREQ_MINUTES) {
+        console.log('Tumblr next update in', process.env.TUMBLR_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     }
 
     if (needUpdate) {
       exports.fetch(3, 0, function(err, posts) {
-        console.log('Tumblr needUpdate && fetch:', posts.length);
+        console.log('Tumblr needed update and fetched:', posts.length);
         if (!err) {
           var bulk = db.collection('tumblrdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
@@ -110,7 +128,6 @@ exports.update = function(cb) {
         }
       }); 
     } else {
-       console.log('Tumblr !needUpdate');
       cb(false);  
     }
   });
@@ -122,9 +139,8 @@ exports.setup = function(cb) {
   var count = 0;
 
   function _fetchAndSave(fetchCallback) {
-    console.log('Tumblr _fetchAndSave, count: ', count, ' offset: ', offset);
     exports.fetch(20, offset, function(err, posts) {
-      console.log('Tumblr _fetchAndSave, count: ', count, ' length: ', posts.length);
+      console.log('Tumblr setup, page:', count, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('tumblrdb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {

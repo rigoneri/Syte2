@@ -2,43 +2,46 @@ var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
       dates = require('../utils/dates'),
-      async = require('async');
+      async = require('async'),
+      cache = require('memory-cache');
 
 var LASTFM_API_URL = 'http://ws.audioscrobbler.com/2.0/';
-
-var lastfmTracks = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'lastfm-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && lastfmTracks[start]) {
-          cb(null, lastfmTracks[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Lastfm page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('lastfmdb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Lastfm month:', start,' got from db: ',  posts.length);
+            console.log('Lastfm page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              lastfmTracks = {};
-              lastfmTracks[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (lastfmTracks[start]) {
-        cb(null, lastfmTracks[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Lastfm page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('lastfmdb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Lastfm month:', start,' got from db: ',  posts.length);
+          console.log('Lastfm page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            lastfmTracks[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -52,8 +55,8 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Lastfm next update in', process.env.LASTFM_UPDATE_STREAM_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.LASTFM_UPDATE_STREAM_FREQ_MINUTES) {
+        console.log('Lastfm next update in', process.env.LASTFM_UPDATE_STREAM_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     }
@@ -65,7 +68,7 @@ exports.update = function(cb) {
 
       function _fetchAndGroup(fetchCallback) {
         exports.fetch(200, page, function(err, activities) {
-          console.log('Lastfm needUpdate && fetch:', activities.length);
+          console.log('Lastfm needed update and fetched:', activities.length);
           if (!err && activities && activities.length > 0) {
   
             for(var i=0; i<activities.length; i++) {
@@ -120,7 +123,6 @@ exports.update = function(cb) {
         }
       });
     } else {
-      console.log('Lastfm !needUpdate');
       cb(false);  
     }
   });
@@ -132,9 +134,8 @@ exports.setup = function(cb) {
   var groups = {};
 
   function _fetchAndGroup(fetchCallback) {
-    console.log('Lastfm _fetchAndGroup, page: ', page);
     exports.fetch(200, page, function(err, activities) {
-      console.log('Lastfm _fetchAndGroup, page: ', page, ' length: ', activities.length);
+      console.log('Lasfm setup, page:', page, 'received:', activities.length);
       if (!err && activities && activities.length > 0) {
         
         for(var i=0; i<activities.length; i++) {
@@ -311,7 +312,6 @@ function _cleanFetchResponse(recentTracks) {
   return tracks;
 }
 
-var lastfmUser;
 var lastUpdatedUser;
 
 exports.user = function(cb) {
@@ -323,8 +323,9 @@ exports.user = function(cb) {
     }
   }
 
-  if (!needUpdate && lastfmUser) {
-    cb(null, lastfmUser);
+  var cachedUser = cache.get('lastfm-user');
+  if (!needUpdate && cachedUser) {
+    cb(null, cachedUser);
     return;
   }
 
@@ -339,7 +340,7 @@ exports.user = function(cb) {
         body = body.user;
       }
 
-      lastfmUser = {
+      var lastfmUser = {
         'name': body.realname,
         'username': body.name,
         'url': body.url
@@ -355,8 +356,8 @@ exports.user = function(cb) {
         }
       }
 
+      cache.put('lastfm-user', lastfmUser);
       lastUpdatedUser = new Date();
-
       cb(null, lastfmUser);
     } else {
       cb(error, null);
@@ -364,7 +365,7 @@ exports.user = function(cb) {
   });
 };
 
-var recentTracks = [];
+
 var lastUpdatedTracks;
 
 exports.recentActivity = function(cb) {
@@ -376,21 +377,21 @@ exports.recentActivity = function(cb) {
     }
   }
 
-  if (!needUpdate && recentTracks.length) {
-    cb(null, recentTracks);
+  var cachedActivity = cache.get('lastfm-activity');
+  if (!needUpdate && cachedActivity.length) {
+    cb(null, cachedActivity);
     return;
   }
 
   exports.fetch(50, 0, function(err, activities) {
     if (activities) {
-      recentTracks = activities;
+      cache.put('lastfm-activity', activities);
       lastUpdatedTracks = new Date();
     }
     cb(err, activities);
   });
 };
 
-var topActivity = {};
 var lastUpdatedTop;
 
 exports.topActivity =  function(cb) {
@@ -402,8 +403,9 @@ exports.topActivity =  function(cb) {
     }
   }
 
-  if (!needUpdate && topActivity) {
-    cb(null, topActivity);
+  var cachedActivity = cache.get('lastfm-top');
+  if (!needUpdate && cachedActivity) {
+    cb(null, cachedActivity);
     return;
   }
 
@@ -413,12 +415,13 @@ exports.topActivity =  function(cb) {
     _fetchTopTracks
   ], function(err, results) {
     if (!err) {
-      topActivity = {
+      var topActivity = {
         'artists': results[0],
         'albums': results[1],
         'tracks': results[2]
       };
       lastUpdatedTop = new Date();
+      cache.put('lastfm-top', topActivity);
       cb(err, topActivity);
     } else {
       cb(err, results);

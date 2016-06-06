@@ -2,7 +2,7 @@ var express = require('express'),
      router = express.Router(),
      Tumblr = require('../models/tumblr');
 
-router.get('/setup', function(req, res) {
+router.get('/', function(req, res) {
   Tumblr.monthActvity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);

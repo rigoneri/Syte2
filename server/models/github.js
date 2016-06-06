@@ -2,29 +2,30 @@ var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
       dates = require('../utils/dates'),
-   markdown = require( "markdown" ).markdown;
+   markdown = require( "markdown" ).markdown,
+      cache = require('memory-cache');
 
 var GITHUB_API_URL = 'https://api.github.com/';
-
-var githubPosts = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'github-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && githubPosts[start]) {
-          cb(null, githubPosts[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Github page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('githubdb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Github month:', start,' got from db: ',  posts.length);
+            console.log('Github page', page, 'used db:', posts.length);            
             if (!err && posts.length) {
-              githubPosts = {};
               var groupedCommits =_groupCommits(posts);
-              githubPosts[start] = groupedCommits;
+              cache.put(cacheKey, groupedCommits);
               cb(err, groupedCommits);
             } else {
               cb(err, posts);
@@ -33,16 +34,18 @@ exports.monthActvity = function(page, cb) {
         }
       });
     } else {
-      if (githubPosts[start]) {
-        cb(null, githubPosts[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Github page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('githubdb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Github month:', start,' got from db: ',  posts.length);
+          console.log('Github page', page, 'used db:', posts.length);
           if (!err && posts.length) {
             var groupedCommits =_groupCommits(posts);
-            githubPosts[start] = groupedCommits;
+            cache.put(cacheKey, groupedCommits);
             cb(err, groupedCommits);
           } else {
             cb(err, posts);
@@ -91,15 +94,15 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Github next update in', process.env.GITHUB_UPDATE_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.GITHUB_UPDATE_FREQ_MINUTES) {
+        console.log('Github next update in', process.env.GITHUB_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     }
 
     if (needUpdate) {
       exports.fetch(1, function(err, posts) {
-        console.log('Github needUpdate && fetch:', posts.length);
+        console.log('Github needed update and fetched:', posts.length);
         if (!err) {
           var bulk = db.collection('githubdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
@@ -121,7 +124,6 @@ exports.update = function(cb) {
         }
       }); 
     } else {
-      console.log('Github !needUpdate');
       cb(false);  
     }
   });
@@ -133,7 +135,7 @@ exports.setup = function(cb) {
 
   function _fetchAndSave(fetchCallback) {
     exports.fetch(page, function(err, posts) {
-      console.log('Github _fetchAndSave, page: ', page, ' length: ', posts.length);
+      console.log('Github setup, page:', page, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('githubdb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {
@@ -216,7 +218,7 @@ exports.fetch = function(page, cb) {
   });
 };
 
-var githubUser;
+
 var lastUpdatedUser;
 
 exports.user = function(cb) {
@@ -228,8 +230,9 @@ exports.user = function(cb) {
     }
   }
 
-  if (!needUpdate && githubUser) {
-    cb(null, githubUser);
+  var cachedUser = cache.get('github-user');
+  if (!needUpdate && cachedUser) {
+    cb(null, cachedUser);
     return;
   }
 
@@ -246,7 +249,7 @@ exports.user = function(cb) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
       
-      githubUser = {
+      var githubUser = {
         'id': body.id,
         'name': body.name,
         'username': body.login,
@@ -257,8 +260,8 @@ exports.user = function(cb) {
         'following': body.following || 0
       };
 
+      cache.put('github-user', githubUser);
       lastUpdatedUser = new Date();
-
       cb(null, githubUser);
     } else {
       cb(error, null);
@@ -266,7 +269,7 @@ exports.user = function(cb) {
   });
 };
 
-var githubRepos;
+
 var lastUpdatedRepos;
 
 exports.repos = function(cb) {
@@ -278,8 +281,9 @@ exports.repos = function(cb) {
     }
   }
 
-  if (!needUpdate && githubRepos) {
-    cb(null, githubRepos);
+  var cachedRepos = cache.get('github-repos');
+  if (!needUpdate && cachedRepos) {
+    cb(null, cachedRepos);
     return;
   }
 
@@ -296,7 +300,7 @@ exports.repos = function(cb) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
 
-      githubRepos = [];
+      var githubRepos = [];
       for (var i=0; i<body.length; i++) {
         var repo = body[i];
         if (!repo.private) {
@@ -314,6 +318,7 @@ exports.repos = function(cb) {
         }
       }
 
+      cache.put('github-repos', githubRepos);
       lastUpdatedRepos = new Date();
 
       cb(null, githubRepos);
@@ -323,12 +328,10 @@ exports.repos = function(cb) {
   });
 };
 
-var githubActivity = []
 var lastUpdatedActivity;
 //Todo consider saving this to db and implement paging...
 
 exports.recentActivity = function(cb) { 
-
   var needUpdate = true;
   if (lastUpdatedActivity) {
     var minutes = moment().diff(lastUpdatedActivity, 'minutes');
@@ -337,8 +340,9 @@ exports.recentActivity = function(cb) {
     }
   }
 
-  if (!needUpdate && githubActivity) {
-    cb(null, githubActivity);
+  var cachedActivity = cache.get('github-activity');
+  if (!needUpdate && cachedActivity) {
+    cb(null, cachedActivity);
     return;
   }
 
@@ -355,7 +359,7 @@ exports.recentActivity = function(cb) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
 
-      githubActivity = [];
+      var githubActivity = [];
       for (var i=0; i<body.length; i++) {
         var activity = _parseActivity(body[i]);
         if (activity) {
@@ -363,8 +367,8 @@ exports.recentActivity = function(cb) {
         }
       }
 
+      cache.put('github-activity', githubActivity);
       lastUpdatedActivity = new Date();
-
       cb(null, githubActivity);
     } else {
       cb(error, null);

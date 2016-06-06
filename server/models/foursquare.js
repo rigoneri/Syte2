@@ -1,42 +1,46 @@
 var request = require('request'),
      moment = require('moment'),
          db = require('../db'),
-      dates = require('../utils/dates');
+      dates = require('../utils/dates'),
+      cache = require('memory-cache');
 
 var FOURSQUARE_API_URL = 'https://api.foursquare.com/v2/';
-var foursquareCheckins = {};
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
   dates.monthRange(page, function(start, end) {
+    var cacheKey = 'foursquare-' + moment(start).format('YYYY-MM-DD');
     if (page == 0) {
       //if it's the first month check if data needs to be updated
       exports.update(function(updated) {
-        if (!updated && foursquareCheckins[start]) {
-          cb(null, foursquareCheckins[start]);
+        var cachedData = cache.get(cacheKey);
+        if (!updated && cachedData) {
+          console.log('Foursquare page', page ,'used cache:', cachedData.length);
+          cb(null, cachedData);
         } else {
           db.collection('foursquaredb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Foursquare month:', start,' got from db: ',  posts.length);
+            console.log('Foursquare page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              foursquareCheckins = {};
-              foursquareCheckins[start] = posts;
+              cache.put(cacheKey, posts);
             }
             cb(err, posts);
           });
         }
       });
     } else {
-      if (foursquareCheckins[start]) {
-        cb(null, foursquareCheckins[start]);
+      var cachedData = cache.get(cacheKey);
+      if (cachedData) {
+        console.log('Foursquare page', page ,'used cache:', cachedData.length);
+        cb(null, cachedData);
       } else {
         db.collection('foursquaredb').find({
           'date': { $gte: start, $lte: end }
         }).sort({'date': -1}).toArray(function (err, posts) {
-          console.log('Foursquare month:', start,' got from db: ',  posts.length);
+          console.log('Foursquare page', page, 'used db:', posts.length);
           if (!err && posts.length) {
-            foursquareCheckins[start] = posts;
+            cache.put(cacheKey, posts);
           }
           cb(err, posts);
         });
@@ -50,15 +54,15 @@ exports.update = function(cb) {
     var needUpdate = true;
     if (date) {
       var minutes = moment().diff(date, 'minutes');
-      console.log('Foursquare next update in', process.env.FOURSQUARE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
       if (minutes < process.env.FOURSQUARE_UPDATE_FREQ_MINUTES) {
+        console.log('Foursquare next update in', process.env.FOURSQUARE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
     }
 
     if (needUpdate) {
       exports.fetch(20, 0, function(err, checkins) {
-        console.log('Foursquare needUpdate && fetch:', checkins.length);
+        console.log('Foursquare needed update and fetched:', checkins.length);
         if (!err) {
           var bulk = db.collection('foursquaredb').initializeUnorderedBulkOp();
           for (var i=0; i<checkins.length; i++) {
@@ -80,7 +84,6 @@ exports.update = function(cb) {
         }
       }); 
     } else {
-      console.log('Foursquare !needUpdate');
       cb(false);  
     }
   });
@@ -92,9 +95,8 @@ exports.setup = function(cb) {
   var count = 0;
 
   function _fetchAndSave(fetchCallback) {
-    console.log('Foursquare _fetchAndSave, count: ', count, ' offset: ', offset);
     exports.fetch(100, offset, function(err, posts) {
-      console.log('Foursquare _fetchAndSave, count: ', count, ' length: ', posts.length);
+      console.log('Foursquare setup, page:', count, 'received:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('foursquaredb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {
@@ -189,7 +191,6 @@ exports.fetch = function(count, offset, cb) {
   });
 };
 
-var foursquareUser;
 var lastUpdatedUser;
 
 exports.user = function(cb) {
@@ -201,8 +202,9 @@ exports.user = function(cb) {
     }
   }
 
-  if (!needUpdate && foursquareUser) {
-    cb(null, foursquareUser);
+  var cachedUser = cache.get('foursquare-user');
+  if (!needUpdate && cachedUser) {
+    cb(null, cachedUser);
     return;
   }
 
@@ -216,7 +218,7 @@ exports.user = function(cb) {
         body = body.response.user;
       }
 
-      foursquareUser = {
+      var foursquareUser = {
         'id': body.id,
         'name': body.firstName + ' ' + body.lastName,
         'url': body.canonicalUrl,
@@ -231,6 +233,7 @@ exports.user = function(cb) {
         foursquareUser.picture = 'https://is0.4sqi.net/userpix_thumbs' + body.photo.suffix;
       }
 
+      cache.put('foursquare-user', foursquareUser);
       lastUpdatedUser = new Date();
 
       cb(null, foursquareUser);
