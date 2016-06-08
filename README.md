@@ -80,7 +80,7 @@ For deployment Syte2 uses [Heroku](http://www.heroku.com/) (since they have a fr
 
 There are a few steps in order to get Syte2 configured, but don't worry they are pretty easy.
 
-1. [Getting started and initial content changes](docs/initial.md)
+1. [Getting started and initial content changes](docs/start.md)
 2. [Running the project locally](docs/running.md)
 3. [Setting up Twitter](docs/twitter.md)
 4. [Setting up Github](docs/github.md)

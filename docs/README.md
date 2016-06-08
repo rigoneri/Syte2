@@ -2,7 +2,7 @@
 
 There are a few steps in order to get Syte2 configured, but don't worry they are pretty easy.
 
-1. [Getting started and initial content changes](initial.md)
+1. [Getting started and initial content changes](start.md)
 2. [Running the project locally](running.md)
 3. [Setting up Twitter](twitter.md)
 4. [Setting up Github](github.md)

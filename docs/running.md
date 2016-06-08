@@ -1,4 +1,4 @@
-If you haven't done so, please follow the instructions on [getting started and initial content changes](initial.md)
+If you haven't done so, please follow the instructions on [getting started and initial content changes](start.md)
 
 ###Running the project locally
 
