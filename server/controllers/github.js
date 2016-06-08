@@ -13,6 +13,17 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/setup', function(req, res) {
+  if (process.env.SETUP_ENABLED != 'true') {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  Github.setup(function(error, data) {
+    res.status(200).send(error ? 'Setup failed see logs': 'Setup done!');
+  });
+});
+
 router.get('/auth', function(req, res) {
   if (process.env.GITHUB_OAUTH_ENABLED != 'true') {
     res.status(404).send('Not found');

@@ -10,6 +10,18 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/setup', function(req, res) {
+  if (process.env.SETUP_ENABLED != 'true') {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  Dribbble.setup(function(error, data) {
+    res.status(200).send(error ? 'Setup failed see logs': 'Setup done!');
+  });
+});
+
+
 router.get('/user', function(req, res) {
   Dribbble.user(function(error, data) {
     res.status(200).json(data);
@@ -18,7 +30,7 @@ router.get('/user', function(req, res) {
 
 router.get('/:page', function(req, res) {
   var page = parseInt(req.params.page);
-  if (!page) 
+  if (!page)
     page = 0;
 
   Dribbble.recentActivity(page, function(error, data) {

@@ -87,9 +87,9 @@ exports.update = function(cb) {
         } else {
           cb(false);
         }
-      }); 
+      });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -125,20 +125,20 @@ exports.setup = function(cb) {
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('foursquare', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
 };
 
-exports.fetch = function(count, offset, cb) { 
+exports.fetch = function(count, offset, cb) {
   var url = FOURSQUARE_API_URL + 'users/self/checkins?oauth_token=' +
             process.env.FOURSQUARE_ACCESS_TOKEN + '&v=20160520&limit=' + count;
 
@@ -258,7 +258,7 @@ var FOURSQUARE_TOKEN_URL = 'https://foursquare.com/oauth2/access_token',
 
 exports.getToken = function(code, cb) {
   var url = FOURSQUARE_TOKEN_URL + '?client_id='+ process.env.FOURSQUARE_CLIENT_ID +
-    '&client_secret=' + process.env.FOURSQUARE_CLIENT_SECRET + 
+    '&client_secret=' + process.env.FOURSQUARE_CLIENT_SECRET +
     '&grant_type=authorization_code' +
     '&redirect_uri=' + FOURSQUARE_AUTH_REDIRECT_URL +
     '&code=' + code

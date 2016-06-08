@@ -137,7 +137,7 @@ exports.update = function(cb) {
         }
       });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -147,7 +147,7 @@ exports.setup = function(cb) {
     cb(null, []);
     return;
   }
-  
+
   //Gets most of the users tweets (up to 300?!) and saves to the db...
   var max_id = null;
   var count = 0;
@@ -185,7 +185,7 @@ exports.setup = function(cb) {
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
@@ -193,7 +193,7 @@ exports.setup = function(cb) {
       if (!err) {
         lastUpdated = new Date();
       }
-      
+
       if (user) {
         cache.put('twitter-user', user);
         db.collection('twitterdb').updateOne({'id': user.id}, user, {upsert: true}, function(err, results) {
@@ -262,7 +262,7 @@ exports.fetch = function(count, max_id, cb) {
                       post.video = videoInfo.url;
                     }
                   }
-                } 
+                }
             }
             post.pictures = pictures;
 

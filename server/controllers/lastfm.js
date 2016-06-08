@@ -10,6 +10,17 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/setup', function(req, res) {
+  if (process.env.SETUP_ENABLED != 'true') {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  Lastfm.setup(function(error, data) {
+    res.status(200).send(error ? 'Setup failed see logs': 'Setup done!');
+  });
+});
+
 router.get('/user', function(req, res) {
   Lastfm.user(function(error, data) {
     res.status(200).json(data);

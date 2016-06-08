@@ -75,12 +75,12 @@ exports.update = function(cb) {
   db.lastUpdatedDate(lastUpdated, 'instagram', function(date) {
     var needUpdate = true;
     if (date) {
-      var minutes = moment().diff(date, 'minutes');      
+      var minutes = moment().diff(date, 'minutes');
       if (minutes < process.env.INSTAGRAM_UPDATE_FREQ_MINUTES) {
         console.log('Instagram next update in', process.env.INSTAGRAM_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
-    } 
+    }
 
     if (needUpdate) {
       exports.fetch(10, null, function(err, posts) {
@@ -104,8 +104,8 @@ exports.update = function(cb) {
         } else {
           cb(false)
         }
-      }); 
-    } else {      
+      });
+    } else {
       cb(false);
     }
   });
@@ -146,14 +146,14 @@ exports.setup = function(cb) {
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('instagram', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
@@ -190,7 +190,7 @@ exports.fetch = function(count, max_id, cb) {
           'picture': post.images && post.images.thumbnail ? post.images.thumbnail.url : null,
           'pictureHD':  post.images && post.images.standard_resolution ? post.images.standard_resolution.url : null,
           'likes': post.likes && post.likes.count ? post.likes.count : 0,
-          'comments': post.comments && post.comments.count ? post.comments.count : 0, 
+          'comments': post.comments && post.comments.count ? post.comments.count : 0,
           'text': post.caption && post.caption.text ? linkifyText(post.caption.text) : null,
           'user': post.user || null
         };
@@ -244,7 +244,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = INSTAGRAM_API_URL + 'users/self?access_token=' + 
+  var url = INSTAGRAM_API_URL + 'users/self?access_token=' +
             process.env.INSTAGRAM_ACCESS_TOKEN;
 
   request(url, function (error, response, body) {

@@ -10,9 +10,20 @@ router.get('/', function(req, res) {
   });
 });
 
+router.get('/setup', function(req, res) {
+  if (process.env.SETUP_ENABLED != 'true') {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  Tumblr.setup(function(error, data) {
+    res.status(200).send(error ? 'Setup failed see logs': 'Setup done!');
+  });
+});
+
 router.get('/:page', function(req, res) {
   var page = parseInt(req.params.page);
-  if (!page) 
+  if (!page)
     page = 0;
 
   Tumblr.recentActivity(page, function(error, data) {
