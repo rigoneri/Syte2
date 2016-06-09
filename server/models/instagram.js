@@ -41,6 +41,10 @@ exports.monthActvity = function(page, cb) {
                   cachePosts.push(postsDict[k]);
                 }
                 cache.put(cacheKey, cachePosts);
+
+                if (cahcePosts.length != posts.legal) {
+                  console.log('Instagram found duplicate');
+                }
                 cb(err, cachePosts);
                 return;
               } else {
@@ -91,15 +95,19 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('instagram', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
+          bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Instagram Bulk error', err);
             }
+
+            db.setLastUpdatedDate('instagram', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false)
@@ -122,27 +130,33 @@ exports.setup = function(cb) {
 
   function _fetchAndSave(fetchCallback) {
     exports.fetch(50, max_id, function(err, posts, next_max_id) {
-      console.log('Instagram setup, page:', count, 'received:', posts.length);
+      console.log('Instagram setup, page:', count, '.:', posts.length);
       if (!err && posts && posts.length > 0) {
         var bulk = db.collection('instagramdb').initializeUnorderedBulkOp();
         for (var i=0; i<posts.length; i++) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        if (next_max_id) {
-          max_id = next_max_id;
-          count++;
-          if (count > 5) {
-            fetchCallback();
+        bulk.execute(function(err, result) {
+          if (err) {
+            console.log('Instagram Bulk error during _fetchAndSave', err);
           } else {
-            _fetchAndSave(fetchCallback);
+            console.log('Instagram ')
           }
-        }
-        else {
-          fetchCallback();
-        }
+
+          if (next_max_id) {
+            max_id = next_max_id;
+            count++;
+            if (count > 5) {
+              fetchCallback();
+            } else {
+              _fetchAndSave(fetchCallback);
+            }
+          }
+          else {
+            fetchCallback();
+          }
+        });
       } else {
         fetchCallback();
       }

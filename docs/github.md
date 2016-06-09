@@ -24,4 +24,4 @@ Next, restart the server and open the following url <http://localhost:3000/githu
 
 ---
 
-Next: [Setting up Dribbble](docs/dribbble.md)
+Next: [Setting up Dribbble](dribbble.md)

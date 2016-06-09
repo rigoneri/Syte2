@@ -93,7 +93,7 @@ exports.recentActivity = function(page, cb) {
   } else {
     var start = page * limit;
     var end = start + limit;
-    
+
     if (allPosts.slice(start, end).length) {
       var pagePosts = allPosts.slice(start, end);
       cb(null, pagePosts);
@@ -122,7 +122,7 @@ exports.update = function(cb) {
   db.lastUpdatedDate(lastUpdated, 'dribbble', function(date) {
     var needUpdate = true;
     if (date) {
-      var minutes = moment().diff(date, 'minutes');      
+      var minutes = moment().diff(date, 'minutes');
       if (minutes < process.env.DRIBBBLE_UPDATE_FREQ_MINUTES) {
         console.log('Dribbble next update in', process.env.DRIBBBLE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
@@ -138,22 +138,22 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('dribbble', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('dribbble', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false);
         }
-      }); 
+      });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -176,32 +176,32 @@ exports.setup = function(cb) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        page++;
-        if (page > 3) {
-          fetchCallback();
-        } else {
-          _fetchAndSave(fetchCallback);
-        }
+        bulk.execute(function(err, result) {
+          page++;
+          if (page > 3) {
+            fetchCallback();
+          } else {
+            _fetchAndSave(fetchCallback);
+          }
+        });
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('dribbble', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
 };
 
-exports.fetch = function(count, page, cb) { 
-  var url = DRIBBBLE_API_URL + 'users/'+ 
+exports.fetch = function(count, page, cb) {
+  var url = DRIBBBLE_API_URL + 'users/'+
             process.env.DRIBBBLE_USERNAME + '/shots?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN + '&per_page=' + count;
 
@@ -269,7 +269,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = DRIBBBLE_API_URL + 'users/'+ 
+  var url = DRIBBBLE_API_URL + 'users/'+
             process.env.DRIBBBLE_USERNAME + '?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN;
 

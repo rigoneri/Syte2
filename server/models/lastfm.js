@@ -75,7 +75,7 @@ exports.update = function(cb) {
         exports.fetch(200, page, function(err, activities) {
           console.log('Lastfm needed update and fetched:', activities.length);
           if (!err && activities && activities.length > 0) {
-  
+
             for(var i=0; i<activities.length; i++) {
               var activity = activities[i];
               var day = moment(activity.date).format('YYYY-MM-DD');
@@ -102,7 +102,7 @@ exports.update = function(cb) {
           } else {
             fetchCallback();
           }
-        }, from.unix()); 
+        }, from.unix());
       }
 
       _fetchAndGroup(function() {
@@ -113,22 +113,22 @@ exports.update = function(cb) {
             var activity = activitiesToSave[i];
             bulk.find({'id': activity.id}).upsert().updateOne(activity);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('lastfm', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('lastfm', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false);
         }
       });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -147,7 +147,7 @@ exports.setup = function(cb) {
     exports.fetch(200, page, function(err, activities) {
       console.log('Lasfm setup, page:', page, 'received:', activities.length);
       if (!err && activities && activities.length > 0) {
-        
+
         for(var i=0; i<activities.length; i++) {
           var activity = activities[i];
           var day = moment(activity.date).format('YYYY-MM-DD');
@@ -174,7 +174,7 @@ exports.setup = function(cb) {
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndGroup(function() {
@@ -185,13 +185,13 @@ exports.setup = function(cb) {
         var activity = activitiesToSave[i];
         bulk.find({'id': activity.id}).upsert().updateOne(activity);
       }
-      bulk.execute();
-
-      db.setLastUpdatedDate('lastfm', function(err) {
-        if (!err) {
-          lastUpdated = new Date();
-        } 
-        exports.monthActvity(0, cb);
+      bulk.execute(function(err, result) {
+        db.setLastUpdatedDate('lastfm', function(err) {
+          if (!err) {
+            lastUpdated = new Date();
+          }
+          exports.monthActvity(0, cb);
+        });
       });
     }
   });
@@ -217,7 +217,7 @@ function _groupActivitiesToSave(groups) {
 
     tracks.sort(function(a, b) {
       return a.plays < b.plays ? 1 : -1;
-    }); 
+    });
 
     var activity = {
       'id': day,
@@ -229,7 +229,7 @@ function _groupActivitiesToSave(groups) {
     };
 
     for (var t=0; t<tracks.length; t++) {
-      var track = tracks[t]; 
+      var track = tracks[t];
       activity.tracks.push({
         'title': track.title,
         'artist': track.artist,
@@ -248,7 +248,7 @@ function _groupActivitiesToSave(groups) {
   return activitiesToSave;
 }
 
-exports.fetch = function(count, page, cb, from) { 
+exports.fetch = function(count, page, cb, from) {
   var url = LASTFM_API_URL + '?method=user.getrecenttracks&user=' +
             process.env.LASTFM_USERNAME + '&extended=1&api_key=' +
             process.env.LASTFM_API_KEY + '&format=json&limit=' + count;
@@ -260,7 +260,7 @@ exports.fetch = function(count, page, cb, from) {
   if (from) {
     url += '&from=' + from;
   }
-  
+
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);

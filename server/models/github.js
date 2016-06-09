@@ -27,7 +27,7 @@ exports.monthActvity = function(page, cb) {
           db.collection('githubdb').find({
             'date': { $gte: start, $lte: end }
           }).sort({'date': -1}).toArray(function (err, posts) {
-            console.log('Github page', page, 'used db:', posts.length);            
+            console.log('Github page', page, 'used db:', posts.length);
             if (!err && posts.length) {
               var groupedCommits =_groupCommits(posts);
               cache.put(cacheKey, groupedCommits);
@@ -114,22 +114,22 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('github', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('github', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false);
         }
-      }); 
+      });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -152,32 +152,32 @@ exports.setup = function(cb) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        page++;
-        if (page > 10) {
-          fetchCallback();
-        } else {
-          _fetchAndSave(fetchCallback);
-        }
+        bulk.execute(function(err, result) {
+          page++;
+          if (page > 10) {
+            fetchCallback();
+          } else {
+            _fetchAndSave(fetchCallback);
+          }
+        });
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('github', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
 };
 
-exports.fetch = function(page, cb) { 
-  var url = GITHUB_API_URL + 'users/'+ 
+exports.fetch = function(page, cb) {
+  var url = GITHUB_API_URL + 'users/'+
             process.env.GITHUB_USERNAME + '/events?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 
@@ -246,7 +246,7 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+
             process.env.GITHUB_USERNAME + '?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 
@@ -258,7 +258,7 @@ exports.user = function(cb) {
     }, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
-      
+
       var githubUser = {
         'id': body.id,
         'name': body.name,
@@ -297,7 +297,7 @@ exports.repos = function(cb) {
     return;
   }
 
-  var url = GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+
             process.env.GITHUB_USERNAME + '/repos?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN + '&sort=updated';
 
@@ -341,7 +341,7 @@ exports.repos = function(cb) {
 var lastUpdatedActivity;
 //Todo consider saving this to db and implement paging...
 
-exports.recentActivity = function(cb) { 
+exports.recentActivity = function(cb) {
   var needUpdate = true;
   if (lastUpdatedActivity) {
     var minutes = moment().diff(lastUpdatedActivity, 'minutes');
@@ -356,7 +356,7 @@ exports.recentActivity = function(cb) {
     return;
   }
 
-  var url = GITHUB_API_URL + 'users/'+ 
+  var url = GITHUB_API_URL + 'users/'+
             process.env.GITHUB_USERNAME + '/events/public?access_token=' +
             process.env.GITHUB_ACCESS_TOKEN;
 

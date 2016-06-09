@@ -73,7 +73,7 @@ exports.recentActivity = function(page, cb) {
   } else {
     var start = page * limit;
     var end = start + limit;
-    
+
     if (allPosts.slice(start, end).length) {
       var pagePosts = allPosts.slice(start, end);
       cb(null, pagePosts);
@@ -118,22 +118,22 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('tumblr', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('tumblr', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false);
         }
-      }); 
+      });
     } else {
-      cb(false);  
+      cb(false);
     }
   });
 };
@@ -143,7 +143,7 @@ exports.setup = function(cb) {
     cb(null, []);
     return;
   }
-  
+
   //Gets most of the users posts (up to 300?!) and saves to the db...
   var offset = 0;
   var count = 0;
@@ -157,32 +157,32 @@ exports.setup = function(cb) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        offset += posts.length;
-        count++;
-        if (count > 3) {
-          fetchCallback();
-        } else {
-          _fetchAndSave(fetchCallback);
-        }
+        bulk.execute(function(err, result) {
+          offset += posts.length;
+          count++;
+          if (count > 3) {
+            fetchCallback();
+          } else {
+            _fetchAndSave(fetchCallback);
+          }
+        });
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('tumblr', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
 };
 
-exports.fetch = function(count, offset, cb) { 
+exports.fetch = function(count, offset, cb) {
   var url = TUMBLR_API_URL + process.env.TUMBLR_BLOG + '/posts?api_key=' +
             process.env.TUMBLR_API_KEY + '&limit=' + count;
 

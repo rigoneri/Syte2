@@ -74,15 +74,15 @@ exports.update = function(cb) {
             var checkin = checkins[i];
             bulk.find({'id': checkin.id}).upsert().updateOne(checkin);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('foursquare', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('foursquare', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false);
@@ -113,15 +113,15 @@ exports.setup = function(cb) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        offset += posts.length;
-        count++;
-        if (count > 3) {
-          fetchCallback();
-        } else {
-          _fetchAndSave(fetchCallback);
-        }
+        bulk.execute(function(err, result) {
+          offset += posts.length;
+          count++;
+          if (count > 3) {
+            fetchCallback();
+          } else {
+            _fetchAndSave(fetchCallback);
+          }
+        });
       } else {
         fetchCallback();
       }

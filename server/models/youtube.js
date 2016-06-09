@@ -73,14 +73,14 @@ exports.recentActivity = function(page, cb) {
   } else {
     var start = page * limit;
     var end = start + limit;
-    
+
     if (allPosts.slice(start, end).length) {
       var pagePosts = allPosts.slice(start, end);
       cb(null, pagePosts);
       return;
     }
 
-    
+
     if (allPosts.length > 0) {
       var lastPost = allPosts[allPosts.length -1];
       query = {'date' : { $lt: lastPost.date }};
@@ -108,7 +108,7 @@ exports.update = function(cb) {
         console.log('Youtube next update in', process.env.YOUTUBE_UPDATE_FREQ_MINUTES - minutes, 'minutes');
         needUpdate = false;
       }
-    } 
+    }
 
     if (needUpdate) {
       exports.fetch(3, null, function(err, posts) {
@@ -119,20 +119,20 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
-
-          db.setLastUpdatedDate('youtube', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
-              cb(true);
-            } else {
-              cb(false);
-            }
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('youtube', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
+                cb(true);
+              } else {
+                cb(false);
+              }
+            });
           });
         } else {
           cb(false)
         }
-      }); 
+      });
     } else {
       cb(false);
     }
@@ -158,31 +158,31 @@ exports.setup = function(cb) {
           var post = posts[i];
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
-        bulk.execute();
-
-        if (nextPageToken) {
-          nextToken = nextPageToken;
-          count++;
-          if (count > 5) {
-            fetchCallback();
-          } else {
-            _fetchAndSave(fetchCallback);
+        bulk.execute(function(err, result) {
+          if (nextPageToken) {
+            nextToken = nextPageToken;
+            count++;
+            if (count > 5) {
+              fetchCallback();
+            } else {
+              _fetchAndSave(fetchCallback);
+            }
           }
-        }
-        else {
-          fetchCallback();
-        }
+          else {
+            fetchCallback();
+          }
+        });
       } else {
         fetchCallback();
       }
-    }); 
+    });
   }
 
   _fetchAndSave(function() {
     db.setLastUpdatedDate('youtube', function(err) {
       if (!err) {
         lastUpdated = new Date();
-      } 
+      }
       exports.monthActvity(0, cb);
     });
   });
@@ -206,7 +206,7 @@ exports.fetch = function(count, nextToken, cb) {
       for (var i = 0; i < body.items.length; i++) {
         var status = body.items[i].status;
         if (status.privacyStatus == 'public') {
-          var post = body.items[i].snippet;        
+          var post = body.items[i].snippet;
           if (post.publishedAt && post.resourceId) {
             var createdDate = moment(post.publishedAt);
             var cleanedPost = {
@@ -357,7 +357,7 @@ exports.getToken = function(code, cb) {
       }
     } else {
       cb(JSON.parse(body))
-    }      
+    }
   });
 };
 

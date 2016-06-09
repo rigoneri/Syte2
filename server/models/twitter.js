@@ -89,48 +89,48 @@ exports.update = function(cb) {
             var post = posts[i];
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
-          bulk.execute();
+          bulk.execute(function(err, result) {
+            db.setLastUpdatedDate('twitter', function(err) {
+              if (!err) {
+                lastUpdated = new Date();
 
-          db.setLastUpdatedDate('twitter', function(err) {
-            if (!err) {
-              lastUpdated = new Date();
+                var cachedUser = cache.get('twitter-user');
+                if (cachedUser && userInfo && userPictures) {
+                  if (userPictures.length < 4) {
+                    var pictures = cachedUser.pictures || [];
+                    for (var p=0; p < pictures.length; p++) {
+                      var picture = pictures[p];
+                      var found = false;
+                      for (var up=0; up < userPictures.length; up++) {
+                        var userPicture = userPictures[up];
+                        if (picture.id == userPicture.id) {
+                          found = true;
+                          break;
+                        }
+                      }
 
-              var cachedUser = cache.get('twitter-user');
-              if (cachedUser && userInfo && userPictures) {
-                if (userPictures.length < 4) {
-                  var pictures = cachedUser.pictures || [];
-                  for (var p=0; p < pictures.length; p++) {
-                    var picture = pictures[p];
-                    var found = false;
-                    for (var up=0; up < userPictures.length; up++) {
-                      var userPicture = userPictures[up];
-                      if (picture.id == userPicture.id) {
-                        found = true;
-                        break;
+                      if (!found) {
+                        userPictures.push(picture);
                       }
                     }
 
-                    if (!found) {
-                      userPictures.push(picture);
-                    }
+                    userPictures.sort(function(a, b) {
+                      return a.date < b.date ? 1 : -1;
+                    });
                   }
 
-                  userPictures.sort(function(a, b) {
-                    return a.date < b.date ? 1 : -1;
+                  userInfo.pictures = userPictures.slice(0, 4);
+                  cache.put('twitter-user', userInfo);
+                  db.collection('twitterdb').updateOne({'id': userInfo.id}, userInfo, {upsert: true}, function(err, results) {
+                    cb(true);
                   });
-                }
-
-                userInfo.pictures = userPictures.slice(0, 4);
-                cache.put('twitter-user', userInfo);
-                db.collection('twitterdb').updateOne({'id': userInfo.id}, userInfo, {upsert: true}, function(err, results) {
+                } else {
                   cb(true);
-                });
+                }
               } else {
-                cb(true);
+                cb(false);
               }
-            } else {
-              cb(false);
-            }
+            });
           });
         } else {
           cb(false);
@@ -164,24 +164,24 @@ exports.setup = function(cb) {
           bulk.find({'id': post.id}).upsert().updateOne(post);
           last_id = post.id;
         }
-        bulk.execute();
+        bulk.execute(function(err, result) {
+          if (!user && userInfo) {
+            user = userInfo;
+            user.pictures = [];
+          }
 
-        if (!user && userInfo) {
-          user = userInfo;
-          user.pictures = [];
-        }
+          if (user && userPictures && user.pictures.length < 4) {
+            user.pictures = user.pictures.concat(userPictures);
+          }
 
-        if (user && userPictures && user.pictures.length < 4) {
-          user.pictures = user.pictures.concat(userPictures);
-        }
-
-        max_id = last_id;
-        count++;
-        if (count > 3) {
-          fetchCallback();
-        } else {
-          _fetchAndSave(fetchCallback);
-        }
+          max_id = last_id;
+          count++;
+          if (count > 3) {
+            fetchCallback();
+          } else {
+            _fetchAndSave(fetchCallback);
+          }
+        });
       } else {
         fetchCallback();
       }
