@@ -1,6 +1,6 @@
 
 TZ = 'America/Chicago'
-MONGODB_URI = ''
+MONGODB_URI = 'mongodb://localhost:27017/syte'
 SETUP_ENABLED = true
 
 TWITTER_INTEGRATION_DISABLED = true

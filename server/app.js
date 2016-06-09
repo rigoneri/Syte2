@@ -21,9 +21,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('./controllers'))
 
-if (app.get('env') === 'development') {
-    app.set('mogodbURL', 'mongodb://localhost:27017/syte');
+app.set('mongodbURL', process.env.MONGODB_URI);
 
+if (app.get('env') === 'development') {
     // This will change in production since we'll be using the dist folder
     app.use(express.static(path.join(__dirname, '../client')));
     // This covers serving up the index page
@@ -41,8 +41,6 @@ if (app.get('env') === 'development') {
 }
 
 if (app.get('env') === 'production') {
-    app.set('mogodbURL', process.env.MONGODB_URI);
-
     // changes it to use the optimized version for production
     app.use(express.static(path.join(__dirname, '/dist')));
 
@@ -57,7 +55,7 @@ if (app.get('env') === 'production') {
     });
 }
 
-db.connect(app.settings.mogodbURL, function(err) {
+db.connect(app.settings.mongodbURL, function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.');
     process.exit(1)
