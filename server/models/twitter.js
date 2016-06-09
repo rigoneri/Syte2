@@ -90,6 +90,9 @@ exports.update = function(cb) {
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Twitter Bulk Error', err);
+            }            
             db.setLastUpdatedDate('twitter', function(err) {
               if (!err) {
                 lastUpdated = new Date();

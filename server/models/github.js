@@ -115,6 +115,9 @@ exports.update = function(cb) {
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Github Bulk Error', err);
+            }
             db.setLastUpdatedDate('github', function(err) {
               if (!err) {
                 lastUpdated = new Date();

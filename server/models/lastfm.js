@@ -114,6 +114,9 @@ exports.update = function(cb) {
             bulk.find({'id': activity.id}).upsert().updateOne(activity);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Lastfm Bulk Error', err);
+            }
             db.setLastUpdatedDate('lastfm', function(err) {
               if (!err) {
                 lastUpdated = new Date();

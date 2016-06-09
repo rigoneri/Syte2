@@ -75,6 +75,9 @@ exports.update = function(cb) {
             bulk.find({'id': checkin.id}).upsert().updateOne(checkin);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Foursquare Bulk Error', err);
+            }
             db.setLastUpdatedDate('foursquare', function(err) {
               if (!err) {
                 lastUpdated = new Date();

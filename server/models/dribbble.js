@@ -139,6 +139,9 @@ exports.update = function(cb) {
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Dribbble Bulk Error', err);
+            }
             db.setLastUpdatedDate('dribbble', function(err) {
               if (!err) {
                 lastUpdated = new Date();

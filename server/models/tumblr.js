@@ -119,6 +119,9 @@ exports.update = function(cb) {
             bulk.find({'id': post.id}).upsert().updateOne(post);
           }
           bulk.execute(function(err, result) {
+            if (err) {
+              console.log('Tumblr Bulk Error', err);
+            }
             db.setLastUpdatedDate('tumblr', function(err) {
               if (!err) {
                 lastUpdated = new Date();

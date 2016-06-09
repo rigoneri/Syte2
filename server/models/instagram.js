@@ -28,28 +28,7 @@ exports.monthActvity = function(page, cb) {
           }).sort({'date': -1}).toArray(function (err, posts) {
             console.log('Instagram page', page, 'used db:', posts.length);
             if (!err && posts.length) {
-              // I've been noticing some weird behaviour with instagram where the last item is duplicated into cache. Trying to see if this will take care of that.
-              if (posts.length > 1) {
-                console.log('Instagram removing duplicate');
-                var postsDict = {};
-                for (var i=0; i<posts.length; i++) {
-                  var post = posts[i];
-                  postsDict[post.id] = post;
-                }
-                var cachePosts = [];
-                for (var k in postsDict) {
-                  cachePosts.push(postsDict[k]);
-                }
-                cache.put(cacheKey, cachePosts);
-
-                if (cahcePosts.length != posts.legal) {
-                  console.log('Instagram found duplicate');
-                }
-                cb(err, cachePosts);
-                return;
-              } else {
                 cache.put(cacheKey, posts);
-              }
             }
             cb(err, posts);
           });
@@ -138,12 +117,6 @@ exports.setup = function(cb) {
           bulk.find({'id': post.id}).upsert().updateOne(post);
         }
         bulk.execute(function(err, result) {
-          if (err) {
-            console.log('Instagram Bulk error during _fetchAndSave', err);
-          } else {
-            console.log('Instagram ')
-          }
-
           if (next_max_id) {
             max_id = next_max_id;
             count++;
