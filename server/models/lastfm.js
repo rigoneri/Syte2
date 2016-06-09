@@ -139,7 +139,7 @@ exports.setup = function(cb) {
     return;
   }
 
-  //Gets most of the users tracks (up to 300?!) and saves to the db...
+  //Gets most of the users tracks (up to 3000?!) and saves to the db...
   var page = 1;
   var groups = {};
 
