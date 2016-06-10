@@ -1,7 +1,8 @@
 <h3 class="h4">{{ item.date | date: 'h:mm a'}}</h3>
 <span class="small-icon tumblr"></span>
 <div class="content" ng-if="item.post_type == 'text'">
-  <h4><a href="{{ item.url }}" targe="_blank">{{ item.title }}</a></h4>
+  <h4>New blog post!</h4>
+  <a href="#/post/{{item.id}}" target="_blank">{{ item.title }}</a>
 </div>
 <div class="content" ng-if="item.post_type == 'photo'">
   <div ng-if="item.photos" ng-repeat="picture in item.photos | limitTo:4" class="pictures" ng-class="{'multiple': item.photos.length > 1}">
@@ -10,12 +11,12 @@
   <p ng-if="item.caption" ng-bind-html="item.caption"></p>
 </div>
 <div class="content" ng-if="item.post_type == 'video' || item.post_type == 'audio'">
-  <p ng-if="item.title"><a href="{{ item.url }}" targe="_blank">{{ item.title }}</a></p>
+  <p ng-if="item.title"><a href="#/post/{{item.id}}" target="_blank">{{ item.title }}</a></p>
   <div class="player" ng-if="item.player" ng-bind-html="item.player"></div>
   <p ng-if="item.caption" ng-bind-html="item.caption"></p>
 </div>
 <div class="content" ng-if="item.post_type == 'link'">
-  <p ng-if="item.title"><a href="{{ item.url }}" targe="_blank">{{ item.title }}</a></p>
+  <p ng-if="item.title"><a href="#/post/{{item.id}}" target="_blank">{{ item.title }}</a></p>
   <div ng-if="item.photos" ng-repeat="picture in item.photos | limitTo:4" class="pictures" ng-class="{'multiple': item.photos.length > 1}">
     <span class="link-pic" lazy-img="{{picture}}"></span>
   </div>
