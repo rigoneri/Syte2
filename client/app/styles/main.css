@@ -194,9 +194,11 @@ body {
   color: #eee;
   -ms-content-zooming: none;
   -ms-overflow-style: -ms-autohiding-scrollbar;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+}
+::selection {
+  background: #79d4d5;
+  color: #fff;
+  text-shadow: none;
 }
 strong,
 b {
@@ -889,10 +891,26 @@ h4,
   z-index: 10;
   margin-top: 40px;
   width: 20%;
+  height: 100%;
 }
 .main-header hgroup a {
   display: block;
   color: #eee;
+}
+.main-header .about-link {
+  display: inline-block;
+  margin: 20px;
+  font-size: 12px;
+  position: absolute;
+  bottom: 30px;
+  -webkit-transition: all 320ms ease-out;
+  transition: all 320ms ease-out;
+}
+.main-header .about-link:hover {
+  -webkit-transform: scale(1.1);
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  transform: scale(1.1);
 }
 .main-header .picture {
   width: 50px;
@@ -961,6 +979,11 @@ h4,
   -webkit-animation: fade-in 500ms ease-in backwards;
   -moz-animation: fade-in 500ms ease-in backwards;
   animation: fade-in 500ms ease-in backwards;
+}
+.main-header.animate .about-link {
+  -webkit-animation: fade-in 500ms ease-in 1400ms backwards;
+  -moz-animation: fade-in 500ms ease-in 1400ms backwards;
+  animation: fade-in 500ms ease-in 1400ms backwards;
 }
 .main-header.animate .main-nav li:nth-child(8) .icon {
   -webkit-animation: scale-in 450ms ease-out 800ms 1 backwards;
@@ -1104,8 +1127,12 @@ h4,
 @media (max-width: 1035px) {
   .main-header {
     width: 50px;
+    height: auto;
   }
   .main-header h1 {
+    display: none;
+  }
+  .main-header .about-link {
     display: none;
   }
   .main-nav li .txt {
@@ -1209,6 +1236,9 @@ h4,
   }
 }
 @media (max-height: 600px) {
+  .main-header .about-link {
+    display: none;
+  }
   .main-nav {
     margin-top: 10px;
   }

@@ -16,10 +16,24 @@
   z-index: 10;
   margin-top: 40px;
   width: 20%;
+  height: 100%;
 
   hgroup a {
     display: block;
     color: @text-color;
+  }
+
+  .about-link {
+    display: inline-block;
+    margin: 20px;
+    font-size: 12px;
+    position: absolute;
+    bottom: 30px;
+    .transition(e('all 320ms ease-out'));
+
+    &:hover {
+      .transform(@transform:scale(1.1));
+    }
   }
 
   .picture {
@@ -99,6 +113,10 @@
     .animation(e('fade-in 500ms ease-in backwards'));
   }
 
+  .about-link {
+    .animation(e('fade-in 500ms ease-in 1400ms backwards'));
+  }
+
   .nav-loop(@counter) when (@counter > 0) {
     .main-nav li:nth-child(@{counter}) {
       .icon { .animation(e('scale-in 450ms ease-out @{counter}00ms 1 backwards')); };
@@ -172,8 +190,13 @@
 @media (max-width: 1035px) {
   .main-header {
     width: 50px;
+    height: auto;
 
     h1 {
+      display: none;
+    }
+
+    .about-link {
       display: none;
     }
   }
@@ -292,6 +315,10 @@
 }
 
 @media (max-height: 600px) {
+  .main-header .about-link  {
+    display: none;
+  }
+
   .main-nav {
     margin-top: 10px;
 

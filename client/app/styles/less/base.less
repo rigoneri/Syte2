@@ -27,7 +27,12 @@ body {
 
   -ms-content-zooming: none;
   -ms-overflow-style: -ms-autohiding-scrollbar;
-  .text-select(none);
+}
+
+::selection {
+  background: @link-color;
+  color: #fff;
+  text-shadow: none;
 }
 
 strong, b {
@@ -38,11 +43,11 @@ strong, b {
 a {
   color: @link-color;
   text-decoration: none;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
-p { 
-  margin: 0 0 15px 0; 
+p {
+  margin: 0 0 15px 0;
 }
 
 blockquote {
