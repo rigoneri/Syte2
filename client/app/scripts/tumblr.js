@@ -12,7 +12,7 @@ angular.module('clientApp')
       var currentPage = 0;
       var running = false;
       var fetching = false;
-      
+
       function handleScroll() {
         if (running) {
           return;
@@ -34,7 +34,7 @@ angular.module('clientApp')
           running = false;
         });
       }
-      
+
       angular.element($window).bind('scroll', handleScroll);
       $scope.$on('$destroy', function() {
         angular.element($window).unbind('scroll', handleScroll);
@@ -99,13 +99,13 @@ angular.module('clientApp')
               $scope.animateEnter = false;
               if (!$scope.$$phase) {
                 $scope.$apply();
-              } 
+              }
             }, 1200);
           }, time);
         }
       }
 
-      _getPosts(function() { 
+      _getPosts(function() {
         _animateEnter(0);
       });
 
@@ -119,6 +119,82 @@ angular.module('clientApp')
             }
           });
         };
+    }
+  ])
+
+  .controller('TumblrViewPostCtrl', ['$scope', '$rootScope', '$routeParams', '$http', 'ModalService', '$sce',
+    function($scope, $rootScope, $routeParams, $http, ModalService, $sce) {
+        $scope.posts = [];
+        $scope.postNotFound = false;
+
+        var fetching = false;
+        function _getPost(cb) {
+          if (fetching) {
+            return;
+          }
+
+          fetching = true;
+          $http.get('/tumblr/post/' + $routeParams.postId).success(function(post, status) {
+            if (status === 200 && post) {
+              if (post.player) {
+                post.player = $sce.trustAsHtml(post.player);
+              } else if (post['post_type'] === 'text') {
+                post.body = $sce.trustAsHtml(post.body);
+              }
+
+              $scope.posts = [post];
+            } else {
+              $scope.postNotFound = true;
+            }
+            fetching = false;
+            cb();
+          }).error(function(data) {
+            console.log('Error', data);
+            fetching = false;
+            $scope.postNotFound = true;
+            cb();
+          });
+        }
+
+
+        function _animateEnter(extraTime) {
+          if (!$scope.animateEnter) {
+            var time = $rootScope.firstEnter ? 500: 1000;
+            time += extraTime <= 500 ? extraTime : 500;
+
+            setTimeout(function() {
+              $scope.animateEnter = true;
+              $scope.visible = true;
+              if (!$scope.$$phase) {
+                 $scope.$apply();
+              }
+              if (!$rootScope.firstEnter) {
+                $rootScope.firstEnter = true;
+              }
+              setTimeout(function() {
+                $scope.animateEnter = false;
+                if (!$scope.$$phase) {
+                  $scope.$apply();
+                }
+              }, 1200);
+            }, time);
+          }
+        }
+
+        _getPost(function() {
+          _animateEnter(0);
+        });
+
+        $scope.openPost = function(item, index) {
+            ModalService.showModal({
+              templateUrl: 'templates/tumblr/details.html',
+              controller: 'TumblrDetailsCtrl',
+              inputs: {
+                item: item,
+                idx: index
+              }
+            });
+          };
     }
   ])
 
@@ -169,7 +245,7 @@ angular.module('clientApp')
         pictureIndex++;
         if (pictureIndex >= item.photos.length) {
           pictureIndex = 0;
-        } 
+        }
         $scope.picture = item.photos[pictureIndex];
         if (!$scope.$$phase) {
           $scope.$apply();
@@ -180,7 +256,7 @@ angular.module('clientApp')
         pictureIndex--;
         if (pictureIndex < 0) {
           pictureIndex = item.photos.length -1;
-        } 
+        }
         $scope.picture = item.photos[pictureIndex];
         if (!$scope.$$phase) {
           $scope.$apply();

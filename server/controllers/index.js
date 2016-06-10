@@ -21,6 +21,9 @@ if (process.env.DRIBBBLE_INTEGRATION_DISABLED != 'true') {
 
 if (process.env.TUMBLR_INTEGRATION_DISABLED != 'true') {
   router.use('/tumblr', require('./tumblr'));
+  router.get('/post/:postId', function(req, res) {
+    res.redirect('/#/post/' + req.params.postId);
+  });
 }
 
 if (process.env.GITHUB_INTEGRATION_DISABLED != 'true') {

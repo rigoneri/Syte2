@@ -39,6 +39,10 @@ angular
         templateUrl: 'templates/tumblr/index.html',
         controller: 'TumblrCtrl'
       })
+      .when('/post/:postId', {
+        templateUrl: 'templates/tumblr/index.html',
+        controller: 'TumblrViewPostCtrl'
+      })
       .when('/foursquare', {
         templateUrl: 'templates/foursquare/index.html',
         controller: 'FoursquareCtrl'

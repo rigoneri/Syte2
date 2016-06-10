@@ -6,6 +6,8 @@ router.get('/', function(req, res) {
   Tumblr.monthActvity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
+    } else {
+      res.status(404).send('Not found');
     }
   });
 });
@@ -21,6 +23,16 @@ router.get('/setup', function(req, res) {
   });
 });
 
+router.get('/post/:postId', function(req, res) {
+  Tumblr.post(req.params.postId, function(error, data) {
+    if (!error) {
+      res.status(200).json(data);
+    } else {
+      res.status(404).send('Not found');
+    }
+  });
+});
+
 router.get('/:page', function(req, res) {
   var page = parseInt(req.params.page);
   if (!page)
@@ -29,6 +41,8 @@ router.get('/:page', function(req, res) {
   Tumblr.recentActivity(page, function(error, data) {
     if (!error) {
       res.status(200).json(data);
+    } else {
+      res.status(404).send('Not found');
     }
   });
 });

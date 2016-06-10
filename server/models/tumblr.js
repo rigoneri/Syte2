@@ -98,6 +98,12 @@ exports.recentActivity = function(page, cb) {
   });
 };
 
+exports.post = function(postId, cb) {
+  db.collection('tumblrdb').findOne({'id': postId}, function (err, post) {
+    cb(err, post);
+  });
+};
+
 exports.update = function(cb) {
   db.lastUpdatedDate(lastUpdated, 'tumblr', function(date) {
     var needUpdate = true;
@@ -207,7 +213,7 @@ exports.fetch = function(count, offset, cb) {
         if (post.state === 'published') {
           var createdDate = moment(new Date(parseInt(post.timestamp) * 1000));
           var cleanedPost = {
-            'id': post.id,
+            'id': post.id.toString(),
             'date': createdDate.toISOString(),
             'type': 'tumblr',
             'url': post.post_url,
