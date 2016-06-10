@@ -12,6 +12,44 @@ var express = require('express'),
 
 var streamPosts;
 
+router.get('/setup', function(req, res) {
+  if (process.env.SETUP_ENABLED != 'true') {
+    res.status(404).send('Not found');
+    return;
+  }
+
+  async.series([
+    function(cb) {
+      Twitter.setup(cb);
+    },
+    function(cb) {
+      Instagram.setup(cb);
+    },
+    function(cb) {
+      Dribbble.setup(cb);
+    },
+    function(cb) {
+      Foursquare.setup(cb);
+    },
+    function(cb) {
+      Tumblr.setup(cb);
+    },
+    function(cb) {
+      Github.setup(cb);
+    },
+    function(cb) {
+      Lastfm.setup(cb);
+    },
+    function(cb) {
+      YouTube.setup(cb);
+    }
+  ], function(err, results) {
+    if (!err) {
+      res.status(200).send(err ? 'Setup failed see logs': 'Setup done!');
+    }
+  });
+});
+
 router.get('/:page', function(req, res) {
   var page = parseInt(req.params.page);
   if (!page)

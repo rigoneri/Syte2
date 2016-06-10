@@ -42,6 +42,8 @@ First go to <https://www.mongodb.com> and download the installer to install Mong
 
 Then follow the [these instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#run-mongodb) to run MongoDB locally.
 
+***Another option*** is to use the *mLab - MongoDB* production database you will be using later when you deploy, [see the first few paragraphs](heroku.md) of the deployment instructions.
+
 ---
 
 Next: [Running the project locally](running.md)
