@@ -1,6 +1,6 @@
 ###Setting up Instagram
 
-To get started create a new application on Instagram for your website by going to <http://instagram.com/developer/>.
+To get started, create a new application on Instagram for your website by going to <http://instagram.com/developer/>.
 
 Enter the **Application Name**, **Description**, **Website URL** and **Valid Redirect URIs**. For the redirect URL enter `http://localhost:3000/instagram/auth`. Once you are done registering you will be given a **Client ID** and **Client Secret**.
 
@@ -17,7 +17,7 @@ Also make sure to set:
 
 Next, restart the server and open the following url <http://localhost:3000/instagram/auth>, you will be taken to Instagram's website and will be asked to sign in and authorize your application. After you authorized you will be taken back to Syte2 and you will be given your **Access Token**. Open the `server > .env` file again and enter:
 
-* **Access Token Secret** under `INSTAGRAM_ACCESS_TOKEN`
+* **Access Token** under `INSTAGRAM_ACCESS_TOKEN`
 
 Next, restart the server and open the following url <http://localhost:3000/instagram/setup>. If everything is setup right, this will fetch some of your recent posts and save them to the database. If you have posted something recently, you should be able to go to <http://localhost:3000> and see that post in your stream and at this point your Instagram page should be working.
 

@@ -1,6 +1,6 @@
 ##Setting up Twitter
 
-To get started create a new application on Twitter for your website by going to <https://dev.twitter.com/apps/new>. Once you are done creating your application you will be taken to the application page, from there navigate to the *Keys and Access Tokens* page.
+To get started, create a new application on Twitter for your website by going to <https://dev.twitter.com/apps/new>. Once you are done creating your application you will be taken to the application page, from there navigate to the *Keys and Access Tokens* page.
 
 At the top of the page it will give you a **Consumer Key** and a **Consumer Secret** that you will need. At the bottom of the page there is a link called **Create my access token** click on that link. It will auto-generate your **Access Token** and **Access Token Secret** that you will also need.
 
