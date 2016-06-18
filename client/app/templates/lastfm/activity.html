@@ -1,6 +1,7 @@
 <h3 class="h4">&nbsp;</h3>
 <span class="small-icon spotify"></span>
 <div class="content">
-  <p>Listened to <a href="{{ item.tracks[0].url }}" target="_blank">{{ item.tracks[0].title }}</a> by <a href="{{ item.tracks[0].url }}" target="_blank">{{ item.tracks[0].artist }}</a> and <strong>{{ item.plays - 1 }}</strong> other tracks on Spotify.</p>
+  <p ng-if="item.tracks.length">Listened to <a href="{{ item.tracks[0].url }}" target="_blank">{{ item.tracks[0].title }}</a> by <a href="{{ item.tracks[0].url }}" target="_blank">{{ item.tracks[0].artist }}</a> and <strong>{{ item.plays - 1 }}</strong> other tracks on Spotify.</p>
+  <p ng-if="!item.tracks.length">Listened to <strong>{{ item.plays }}</strong> tracks on Spotify.</p>
   <a href="{{ track.url }}" target="_blank" ng-if="item.tracks" ng-repeat="track in item.tracks" class="pictures"><span class="pic" lazy-img="{{ track.image }}"></span></a>
 </div>
