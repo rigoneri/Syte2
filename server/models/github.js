@@ -460,8 +460,8 @@ function _parseActivity(activity) {
     if (newActivity.description) {
       newActivity.description += '<a href="' + activity.payload.issue.html_url + '" target="_blank">';
 
-      if (activity.payload.repository) {
-        newActivity.description += activity.payload.repository.full_name;
+      if (activity.repo) {
+        newActivity.description += activity.repo.name;
       }
 
       newActivity.description += '#' + activity.payload.issue.number + '</a>';
@@ -594,8 +594,8 @@ function _parseActivity(activity) {
       'description': 'Starred '
     };
 
-    if (activity.payload.repository) {
-      newActivity.description += '<a href="' + activity.payload.repository.html_url + '" target="_blank">' + activity.payload.repository.full_name + '</a> ';
+    if (activity.repo) {
+      newActivity.description += '<a href="' + activity.repo.url + '" target="_blank">' + activity.repo.name + '</a> ';
     }
 
     return newActivity;
