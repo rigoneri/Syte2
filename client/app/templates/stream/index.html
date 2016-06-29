@@ -10,7 +10,7 @@
         <dribbble-post item="item" ng-if="item.type == 'dribbble'"></dribbble-post>
         <tumblr-post item="item" ng-if="item.type == 'tumblr'"></tumblr-post>
         <github-activity item="item" ng-if="item.type == 'github'"></github-activity>
-        <lastfm-activity item="item" ng-if="item.type == 'lastfm'"></lastfm-activity>
+        <lastfm-activity item="item" ng-if="item.type == 'lastfm' && item.tracks.length"></lastfm-activity>
         <youtube-post item="item" ng-if="item.type == 'youtube'"></youtube-post>
       </li>
     </ul>
