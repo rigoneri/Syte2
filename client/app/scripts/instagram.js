@@ -12,7 +12,7 @@ angular.module('clientApp')
       var currentPage = 0;
       var running = false;
       var fetching = false;
-      
+
       function handleScroll() {
         if (running) {
           return;
@@ -34,7 +34,7 @@ angular.module('clientApp')
           running = false;
         });
       }
-      
+
       angular.element($window).bind('scroll', handleScroll);
       $scope.$on('$destroy', function() {
         angular.element($window).unbind('scroll', handleScroll);
@@ -54,7 +54,7 @@ angular.module('clientApp')
             fetching = false;
             running = false;
             emptyResponses = 0;
-            if (currentPage === 0 && $scope.posts.length < 10) {
+            if (currentPage < 3 && $scope.posts.length < 10) {
                currentPage++;
               _getPosts(cb);
             } else {
@@ -106,17 +106,17 @@ angular.module('clientApp')
               $scope.animateEnter = false;
               if (!$scope.$$phase) {
                 $scope.$apply();
-              } 
+              }
             }, 1200);
           }, time);
         }
       }
 
-      _getUser(function() { 
+      _getUser(function() {
         var start = new Date().getTime();
-        var didLoadAnimateFirst = false; 
+        var didLoadAnimateFirst = false;
 
-        var loadTimeout = setTimeout(function() { 
+        var loadTimeout = setTimeout(function() {
           if (!didLoadAnimateFirst) {
             didLoadAnimateFirst = true;
             _animateEnter(0);
