@@ -8,7 +8,7 @@
     "angular-sanitize": "^1.4.0",
     "moment": "^2.13.0",
     "angular-moment": "^0.10.3",
-    "angular-modal-service": "^0.9.10",
+    "angular-modal-service": "^0.10.1",
     "angular-lazy-img": "^1.2.2",
     "google-maps": "^3.2.1"
   },
