@@ -34,7 +34,7 @@ angular.module('clientApp')
           running = false;
         });
       }
-      
+
       angular.element($window).bind('scroll', handleScroll);
       $scope.$on('$destroy', function() {
         angular.element($window).unbind('scroll', handleScroll);
@@ -51,7 +51,7 @@ angular.module('clientApp')
           if (status === 200 && data && data.length) {
             $scope.tweets = $scope.tweets.concat(data);
 
-            if (currentPage === 0 && data.length < 7) {
+            if ($scope.tweets.length < 7) {
               //since the list of tweets is month based we make sure there's enough
               //data to be displayed on load by going back a month.
               fetching = false;
@@ -109,17 +109,17 @@ angular.module('clientApp')
               $scope.animateEnter = false;
               if (!$scope.$$phase) {
                 $scope.$apply();
-              } 
+              }
             }, 1200);
           }, time);
         }
       }
 
-      _getUser(function() { 
+      _getUser(function() {
         var start = new Date().getTime();
-        var didLoadAnimateFirst = false; 
+        var didLoadAnimateFirst = false;
 
-        var loadTimeout = setTimeout(function() { 
+        var loadTimeout = setTimeout(function() {
           if (!didLoadAnimateFirst) {
             didLoadAnimateFirst = true;
             _animateEnter(0);
@@ -199,7 +199,7 @@ angular.module('clientApp')
         pictureIndex++;
         if (pictureIndex >= item.pictures.length) {
           pictureIndex = 0;
-        } 
+        }
         $scope.picture = item.pictures[pictureIndex].url;
         if (!$scope.$$phase) {
           $scope.$apply();
@@ -210,7 +210,7 @@ angular.module('clientApp')
         pictureIndex--;
         if (pictureIndex < 0) {
           pictureIndex = item.pictures.length -1;
-        } 
+        }
         $scope.picture = item.pictures[pictureIndex].url;
         if (!$scope.$$phase) {
           $scope.$apply();
