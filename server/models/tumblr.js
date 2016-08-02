@@ -118,7 +118,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(3, 0, function(err, posts) {
         console.log('Tumblr needed update and fetched:', posts.length);
-        if (!err) {
+        if (!err && posts && posts.length > 0) {
           var bulk = db.collection('tumblrdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
             var post = posts[i];
@@ -136,6 +136,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('tumblr', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false);

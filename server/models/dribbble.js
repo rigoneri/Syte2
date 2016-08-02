@@ -132,7 +132,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(10, 0, function(err, posts) {
         console.log('Dribbble needed update and fetched:', posts.length);
-        if (!err) {
+        if (!err && posts && posts.length > 0) {
           var bulk = db.collection('dribbbledb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
             var post = posts[i];
@@ -150,6 +150,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('dribbble', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false);

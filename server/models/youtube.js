@@ -113,7 +113,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(3, null, function(err, posts) {
         console.log('Youtube needed update and fetched:', posts.length);
-        if (!err) {
+        if (!err && posts && posts.length > 0) {
           var bulk = db.collection('youtubedb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
             var post = posts[i];
@@ -131,6 +131,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('youtube', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false)

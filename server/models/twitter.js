@@ -83,7 +83,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(30, null, function(err, posts, userInfo, userPictures) {
         console.log('Twitter needed update and fetched:', posts.length);
-        if (!err) {
+        if (!err && posts && posts.length > 0) {
           var bulk = db.collection('twitterdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
             var post = posts[i];
@@ -92,7 +92,7 @@ exports.update = function(cb) {
           bulk.execute(function(err, result) {
             if (err) {
               console.log('Twitter Bulk Error', err);
-            }            
+            }
             db.setLastUpdatedDate('twitter', function(err) {
               if (!err) {
                 lastUpdated = new Date();
@@ -134,6 +134,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('twitter', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false);

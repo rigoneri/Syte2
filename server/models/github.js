@@ -108,7 +108,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(1, function(err, posts) {
         console.log('Github needed update and fetched:', posts.length);
-        if (!err) {
+        if (!err && posts && posts.length > 0) {
           var bulk = db.collection('githubdb').initializeUnorderedBulkOp();
           for (var i=0; i<posts.length; i++) {
             var post = posts[i];
@@ -126,6 +126,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('github', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false);

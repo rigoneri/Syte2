@@ -68,7 +68,7 @@ exports.update = function(cb) {
     if (needUpdate) {
       exports.fetch(20, 0, function(err, checkins) {
         console.log('Foursquare needed update and fetched:', checkins.length);
-        if (!err) {
+        if (!err && checkins && checkins.length > 0) {
           var bulk = db.collection('foursquaredb').initializeUnorderedBulkOp();
           for (var i=0; i<checkins.length; i++) {
             var checkin = checkins[i];
@@ -86,6 +86,13 @@ exports.update = function(cb) {
                 cb(false);
               }
             });
+          });
+        } else if (!err) {
+          db.setLastUpdatedDate('foursquare', function(err) {
+            if (!err) {
+              lastUpdated = new Date();
+            }
+            cb(false);
           });
         } else {
           cb(false);
