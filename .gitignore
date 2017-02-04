@@ -15,7 +15,6 @@ npm-debug.log*
 .DS_Store
 
 # Docker
-Dockerfile
 docker-compose.yml
 
 # Runtime data
