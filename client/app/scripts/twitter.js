@@ -2,8 +2,8 @@
 
 angular.module('clientApp')
 
-  .controller('TwitterCtrl', ['$scope', '$rootScope', '$http', '$window',
-    function($scope, $rootScope, $http, $window) {
+  .controller('TwitterCtrl', ['$scope', '$rootScope', '$http', '$window', 'ModalService',
+    function($scope, $rootScope, $http, $window, ModalService) {
       $scope.user = {};
       $scope.tweets = [];
 
@@ -151,6 +151,17 @@ angular.module('clientApp')
         if (picture.tweetID) {
           $window.open('https://twitter.com/' + $scope.user.username + '/status/' + picture.tweetID);
         }
+      };
+
+      $scope.openPost = function(item, index) {
+        ModalService.showModal({
+          templateUrl: 'templates/twitter/details.html',
+          controller: 'TwitterDetailsCtrl',
+          inputs: {
+            item: item,
+            idx: index
+          }
+        });
       };
     }
   ])
