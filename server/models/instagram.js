@@ -54,6 +54,33 @@ exports.monthActvity = function(page, cb) {
   });
 };
 
+exports.recentActivity = function(cb) {
+  if (process.env.INSTAGRAM_INTEGRATION_DISABLED == 'true') {
+    cb(null, []);
+    return;
+  }
+
+  dates.lastYearRange(function(start, end) {
+    var cacheKey = 'instagram-year-' + moment(start).format('YYYY-MM-DD');
+  
+    var cachedData = cache.get(cacheKey);
+    if (cachedData) {
+      console.log('Instagram recent activity, used cache:', cachedData.length);
+      cb(null, cachedData);
+    } else {
+      db.collection('instagramdb').find({
+        'date': { $gte: start, $lte: end }
+      }).sort({'date': -1}).toArray(function (err, posts) {
+        console.log('Instagram recent activity, used db:', posts.length);
+        if (!err && posts.length) {
+            cache.put(cacheKey, posts);
+        }
+        cb(err, posts);
+      });
+    }
+  });
+};
+
 exports.update = function(cb) {
   db.lastUpdatedDate(lastUpdated, 'instagram', function(date) {
     var needUpdate = true;
@@ -164,7 +191,6 @@ exports.fetch = function(count, max_id, cb) {
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
-
       var next_max_id = null;
       if (body.pagination && body.pagination.next_max_id) {
         next_max_id = body.pagination.next_max_id;
@@ -196,6 +222,7 @@ exports.fetch = function(count, max_id, cb) {
         posts.push(cleanedPost);
       }
 
+      console.log('POSTS', posts)
       cb(null, posts, next_max_id);
     } else {
       cb(error, [], null);

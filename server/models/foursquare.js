@@ -248,9 +248,8 @@ exports.user = function(cb) {
         'location': body.homeCity
       };
 
-      if (body.photo && body.photo.suffix) {
-        //Foursquare's api returned the wrong prefix url so check the url with your foursquare profile.
-        foursquareUser.picture = 'https://is0.4sqi.net/userpix_thumbs' + body.photo.suffix;
+      if (body.photo && body.photo.prefix && body.photo.suffix) {
+        foursquareUser.picture = body.photo.prefix + '260x260' + body.photo.suffix;
       }
 
       cache.put('foursquare-user', foursquareUser);

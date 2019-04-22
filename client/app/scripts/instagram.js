@@ -7,67 +7,22 @@ angular.module('clientApp')
       $scope.user = {};
       $scope.posts = [];
 
-      var streamElement = angular.element(document.getElementById('instagram-page'))[0];
-      var windowElement = angular.element($window)[0];
-      var currentPage = 0;
       var running = false;
       var fetching = false;
 
-      function handleScroll() {
-        if (running) {
-          return;
-        }
-
-        running = true;
-        requestAnimationFrame(function() {
-          if (windowElement.scrollY + windowElement.innerHeight > streamElement.clientHeight - 200) {
-            currentPage++;
-            running = true;
-            _getPosts(function() {
-              if (!$scope.$$phase) {
-                $scope.$apply();
-              }
-            });
-            return;
-          }
-
-          running = false;
-        });
-      }
-
-      angular.element($window).bind('scroll', handleScroll);
-      $scope.$on('$destroy', function() {
-        angular.element($window).unbind('scroll', handleScroll);
-      });
-
-      var emptyResponses = 0;
       function _getPosts(cb) {
-        if (fetching || emptyResponses > 2) {
+        if (fetching) { 
           return;
         }
 
         fetching = true;
-        $http.get('/instagram/' + currentPage).success(function(data, status) {
+        $http.get('/instagram/recent').success(function(data, status) {
           if (status === 200 && data && data.length) {
             $scope.posts = $scope.posts.concat(data);
-
             fetching = false;
             running = false;
-            emptyResponses = 0;
-            if (currentPage < 3 && $scope.posts.length < 10) {
-               currentPage++;
-              _getPosts(cb);
-            } else {
-              cb();
-            }
-          } else {
-            emptyResponses++;
-            fetching = false;
-            if (emptyResponses <= 2) {
-              currentPage++;
-              _getPosts(cb);
-            }
-          }
+            cb();
+          } 
         }).error(function(data) {
           console.log('Error', data);
           fetching = false;

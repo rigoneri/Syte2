@@ -1,6 +1,6 @@
 If you haven't done so, please follow the instructions on [getting started and initial content changes](start.md)
 
-###Running the project locally
+### Running the project locally
 
 Before running the project, make sure you have MongoDB running.
 

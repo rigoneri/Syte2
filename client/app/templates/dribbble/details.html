@@ -14,6 +14,7 @@
         </a>
         <h3 ng-if="!item.user">{{ item.title }}</h3>
         <span am-time-ago="item.date" class="date"></span>
+        <!--
         <div class="stats">
           <a href="{{ item.url }}" ng-if="item.views" target="_blank">
            <span class="small-icon views"></span><span class="val">{{ item.views }}</span>
@@ -24,7 +25,8 @@
          <a href="{{ item.url }}" ng-if="item.comments" target="_blank">
            <span class="small-icon comment"></span><span class="val">{{ item.comments }}</span>
          </a>
-        </div>
+        </div> 
+        -->
         <div ng-bind-html="item.text"></div>
       </div>
     </div>

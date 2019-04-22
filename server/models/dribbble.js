@@ -4,7 +4,7 @@ var request = require('request'),
       dates = require('../utils/dates'),
       cache = require('memory-cache');
 
-var DRIBBBLE_API_URL = 'https://api.dribbble.com/v1/';
+var DRIBBBLE_API_URL = 'https://api.dribbble.com/v2/';
 var lastUpdated;
 
 exports.monthActvity = function(page, cb) {
@@ -211,8 +211,7 @@ exports.setup = function(cb) {
 };
 
 exports.fetch = function(count, page, cb) {
-  var url = DRIBBBLE_API_URL + 'users/'+
-            process.env.DRIBBBLE_USERNAME + '/shots?access_token=' +
+  var url = DRIBBBLE_API_URL + 'user/shots?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN + '&per_page=' + count;
 
   if (page) {
@@ -233,9 +232,9 @@ exports.fetch = function(count, page, cb) {
           'type': 'dribbble',
           'title': post.title,
           'text': post.description,
-          'views': post.views_count || 0,
-          'likes': post.likes_count || 0,
-          'comments': post.comments_count || 0,
+          'views': post.views_count || 0, //no longer supported with api v2
+          'likes': post.likes_count || 0, //no longer supported with api v2
+          'comments': post.comments_count || 0, //no longer supported with api v2
           'url': post.html_url
         };
 
@@ -279,18 +278,16 @@ exports.user = function(cb) {
     return;
   }
 
-  var url = DRIBBBLE_API_URL + 'users/'+
-            process.env.DRIBBBLE_USERNAME + '?access_token=' +
+  var url = DRIBBBLE_API_URL + 'user/?access_token=' +
             process.env.DRIBBBLE_ACCESS_TOKEN;
 
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
-
       var dribbbleUser = {
         'id': body.id,
         'name': body.name,
-        'username': body.username,
+        'username': body.login,
         'url': body.html_url,
         'picture': body.avatar_url,
         'followers': body.followers_count || 0,
@@ -298,12 +295,39 @@ exports.user = function(cb) {
         'shots': body.shots_count || 0,
         'bio': body.bio
       };
-
       cache.put('dribbble-user', dribbbleUser);
       lastUpdatedUser = new Date();
       cb(null, dribbbleUser);
     } else {
       cb(error, null);
+    }
+  });
+};
+
+
+var DRIBBBLE_TOKEN_URL = 'https://dribbble.com/oauth/token',
+    DRIBBBLE_AUTH_REDIRECT_URL = 'http://localhost:3000/dribbble/auth';
+
+exports.getToken = function(code, cb) {
+  request({
+    'url': DRIBBBLE_TOKEN_URL,
+    'method': 'POST',
+    'form': {
+      'client_id': process.env.DRIBBBLE_CLIENT_ID,
+      'client_secret': process.env.DRIBBBLE_CLIENT_SECRET,
+      'redirect_uri': DRIBBBLE_AUTH_REDIRECT_URL,
+      'code': code
+    }
+  }, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      body = JSON.parse(body);
+      if (body.access_token) {
+        cb({'access_token': body.access_token});
+      } else {
+        cb(body);
+      }
+    } else {
+      cb(body);
     }
   });
 };

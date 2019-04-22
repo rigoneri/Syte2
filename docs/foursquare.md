@@ -1,4 +1,4 @@
-###Setting up Foursquare
+### Setting up Foursquare
 
 To get started, create a new application on Foursquare for your website by going to <https://foursquare.com/developers/apps>.
 
@@ -21,7 +21,7 @@ Next, restart the server and open the following url <http://localhost:3000/fours
 
 Next, restart the server and open the following url <http://localhost:3000/instagram/setup>. If everything is setup right, this will fetch some of your recent check-ins and save them to the database. Next we need to setup **map** we use in the Foursquare page.
 
-##Setting Google Maps
+## Setting Google Maps
 
 In order to set up Google Maps we need to get an API Key from Google. If you haven't done so, login to the Google Developers Console by going to <https://console.developers.google.com>. Navigate to `API Manager > Credentials` and create a new project, after that's done go to the [OAuth consent screen](https://console.developers.google.com/apis/credentials/consent) and enter a **Product name** (all other fields are optional).
 

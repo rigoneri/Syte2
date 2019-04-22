@@ -960,6 +960,9 @@ h4,
   -webkit-backface-visibility: hidden;
   transform: scale(1.1);
 }
+.main-nav .icon.twitter {
+  vertical-align: middle;
+}
 .main-nav .icon.instagram {
   font-size: 23px;
 }
@@ -2287,6 +2290,9 @@ h4,
 }
 .instagram-page .posts .post {
   width: 21%;
+  height: 0;
+  padding-bottom: 21%;
+  overflow: hidden;
   float: left;
   margin: 0 0 30px 30px;
   position: relative;
@@ -2428,6 +2434,7 @@ h4,
 @media (max-width: 900px) {
   .instagram-page .posts .post {
     width: 26%;
+    padding-bottom: 26%;
   }
 }
 @media (max-width: 750px) {
@@ -2451,6 +2458,7 @@ h4,
   .instagram-page .posts .post {
     width: 45%;
     max-width: 45%;
+    padding-bottom: 45%;
     margin: 0 0 20px 5%;
   }
 }

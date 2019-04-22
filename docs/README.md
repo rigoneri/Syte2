@@ -1,4 +1,4 @@
-##Setup Instructions
+## Setup Instructions
 
 There are a few steps in order to get Syte2 configured, but don't worry they are pretty easy.
 
@@ -13,7 +13,7 @@ There are a few steps in order to get Syte2 configured, but don't worry they are
 9. [Setting up Foursquare](foursquare.md)
 10. [Setting up Tumblr](tumblr.md)
 
-##Deployment Instructions
+## Deployment Instructions
 
 For now I've only deployed my website to Heroku since it's free to start out. I would love to see it deployed to different services.
 

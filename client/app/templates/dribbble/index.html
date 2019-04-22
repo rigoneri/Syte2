@@ -18,11 +18,13 @@
     <ul>
       <li ng-repeat="item in posts" class="post">
         <img ng-if="item.picture" class="pic" src="images/placeholder.png" lazy-img="{{ item.picture }}" ng-click="openPost(item)" />
+        <!--
         <div class="stats">
           <span class="small-icon views"></span><span class="val">{{ item.views }}</span>
           <span class="small-icon heart"></span><span class="val">{{ item.likes }}</span>
           <span class="small-icon comment"></span><span class="val">{{ item.comments }}</span>
-        </div>    
+        </div>
+        -->
       <li>
     </li>
   </div>

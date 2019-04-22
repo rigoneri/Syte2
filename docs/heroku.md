@@ -1,4 +1,4 @@
-##Deploying to Heroku
+## Deploying to Heroku
 
 First, sign up to [Heroku](http://heroku.com) and download and install [Heroku Toolbet](https://devcenter.heroku.com/articles/getting-started-with-nodejs#set-up), using the terminal in the Syte2 project make sure you can login to heroku `heroku login`.
 
@@ -50,7 +50,6 @@ If you didn't integrate with Foursquare enter:
 
 If you integrated with Dribbble enter:
 
-* `DRIBBBLE_USERNAME`
 * `DRIBBBLE_ACCESS_TOKEN`
 * `DRIBBBLE_UPDATE_FREQ_MINUTES`
 

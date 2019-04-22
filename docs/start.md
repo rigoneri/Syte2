@@ -1,12 +1,12 @@
-###Getting started and initial content changes
+### Getting started and initial content changes
 
 The first step is to fork Syte2. If you plan to contribute to the project and make pull request I also recommend you *branching* your fork. If you don't know what that means or how to do that just [follow these steps](https://help.github.com/articles/fork-a-repo).
 
-##Pictures
+## Pictures
 
 To start off change the pictures to have your picture, navigate to `client > app > images` and replace all **apple-touch-icons**, **favicon.ico** and **pic.jpg** to be your picture. Just don't replace **placeholder.png** since it's used for lazy loading images. Also make sure to keep the same sizes.
 
-##Text changes
+## Text changes
 
 Navigate to `client > app > index.html` and make the following changes:
 

@@ -1,4 +1,4 @@
-###Setting up Instagram
+### Setting up Instagram
 
 To get started, create a new application on Instagram for your website by going to <http://instagram.com/developer/>.
 
@@ -21,7 +21,7 @@ Next, restart the server and open the following url <http://localhost:3000/insta
 
 Next, restart the server and open the following url <http://localhost:3000/instagram/setup>. If everything is setup right, this will fetch some of your recent posts and save them to the database. If you have posted something recently, you should be able to go to <http://localhost:3000> and see that post in your stream and at this point your Instagram page should be working.
 
-***Note: As of June 1, 2016 personal websites will in Sandbox Mode, which means that only 20 of your recent posts will fetched***
+***Note: As of June 1, 2016 personal websites are in Sandbox Mode, which means that only 20 of your recent posts will fetched***
 
 ---
 

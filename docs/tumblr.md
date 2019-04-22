@@ -1,4 +1,4 @@
-###Setting up Tumblr
+### Setting up Tumblr
 
 To get started go to <http://www.tumblr.com/oauth/register> to register your website. Fill in the information required, for default callback url just enter `http://localhost:3000`. Once you are done your website will be listed under <http://www.tumblr.com/oauth/apps> with a **OAuth Consumer Key** next to it.
 

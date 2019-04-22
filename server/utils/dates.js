@@ -12,3 +12,11 @@ exports.monthRange = function(page, cb) {
   cb(startDate.toISOString(), endDate.toISOString());
 };
 
+
+exports.lastYearRange = function(cb) {
+  var startDate = moment().subtract(1, 'years');
+  var endDate = moment();
+  
+  cb(startDate.toISOString(), endDate.toISOString());
+};
+

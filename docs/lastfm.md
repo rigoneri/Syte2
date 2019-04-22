@@ -1,4 +1,4 @@
-##Setting up Spotify with Last.fm
+## Setting up Spotify with Last.fm
 
 The Spotify integration is done via Last.fm since Spotify doesn't have the API we need. So before we can setup the integration you first need a to [Sign up to Last.fm](http://www.last.fm/) then on Spotify go to **Preferences** and under *Social* connect with Last.fm. After that's done every time a song is played Spotify will send that track information to Last.fm. So now, start playing a few songs and after a little while check if those songs are appearing in your Last.fm profile.
 

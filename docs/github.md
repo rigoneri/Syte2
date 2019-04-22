@@ -1,4 +1,4 @@
-##Setting up Github
+## Setting up Github
 
 To get started sign in to GitHub and go to <https://github.com/settings/applications/new> to register your application.
 

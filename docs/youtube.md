@@ -1,4 +1,4 @@
-###Setting up YouTube
+### Setting up YouTube
 
 To get started, login to the Google Developers Console by going to <https://console.developers.google.com>. Navigate to `API Manager > Credentials` and create a new project, after that's done go to the [OAuth consent screen](https://console.developers.google.com/apis/credentials/consent) and enter a **Product name** (all other fields are optional).
 
