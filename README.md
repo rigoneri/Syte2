@@ -96,6 +96,7 @@ There are a few steps in order to get Syte2 configured, but don't worry they are
 For now I've only deployed my website to Heroku since it's free to start out. I would love to see it deployed to different services.
 
 * [Heroku deployment instructions](docs/heroku.md)
+* [Docker deployment instructions](docks/docker.md)
 * AWS deployment instructions (TODO)
 * Google Cloud deployment instructions (TODO)
 
