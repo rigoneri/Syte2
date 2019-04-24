@@ -222,10 +222,12 @@ exports.fetch = function(count, page, cb) {
     if (!error && response.statusCode == 200) {
       body = JSON.parse(body);
 
+      console.log('body', body)
+
       var posts = [];
       for (var i = 0; i < body.length; i++) {
         var post = body[i];
-        var createdDate = moment(post.created_at);
+        var createdDate = moment(post.updated_at);
         var cleanedPost = {
           'id': post.id,
           'date': createdDate.toISOString(),
