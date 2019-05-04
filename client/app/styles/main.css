@@ -1363,9 +1363,12 @@ h4,
 .stream .instagram .pic {
   width: 150px;
   height: 150px;
+  display: block;
+  background-size: cover;
+  background-position: 50% 50%;
+  cursor: pointer;
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
   -webkit-transition: all 320ms ease-out;
   transition: all 320ms ease-out;
 }
