@@ -7,7 +7,7 @@ var request = require('request'),
 var INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
 var lastUpdated;
 
-exports.monthActvity = function(page, cb) {
+exports.monthActivity = function(page, cb) {
   if (process.env.INSTAGRAM_INTEGRATION_DISABLED == 'true') {
     cb(null, []);
     return;
@@ -175,7 +175,7 @@ exports.setup = function(cb) {
       if (!err) {
         lastUpdated = new Date();
       }
-      exports.monthActvity(0, cb);
+      exports.monthActivity(0, cb);
     });
   });
 };

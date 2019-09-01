@@ -3,7 +3,7 @@ var express = require('express'),
     Twitter = require('../models/twitter');
 
 router.get('/', function(req, res) {
-  Twitter.monthActvity(0, function(error, data) {
+  Twitter.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }
@@ -32,7 +32,7 @@ router.get('/:page', function(req, res) {
   if (!page)
     page = 0;
 
-  Twitter.monthActvity(page, function(error, data) {
+  Twitter.monthActivity(page, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

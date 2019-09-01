@@ -6,7 +6,7 @@ var FOURSQUARE_AUTH_URL = 'https://foursquare.com/oauth2/authorize',
     FOURSQUARE_AUTH_REDIRECT_URL = 'http://localhost:3000/foursquare/auth';
 
 router.get('/', function(req, res) {
-  Foursquare.monthActvity(0, function(error, data) {
+  Foursquare.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }
@@ -56,7 +56,7 @@ router.get('/:page', function(req, res) {
   if (!page)
     page = 0;
 
-  Foursquare.monthActvity(page, function(error, data) {
+  Foursquare.monthActivity(page, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

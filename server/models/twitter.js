@@ -6,7 +6,7 @@ var Twitter = require('twitter'),
 
 var lastUpdated;
 
-exports.monthActvity = function(page, cb) {
+exports.monthActivity = function(page, cb) {
   if (process.env.TWITTER_INTEGRATION_DISABLED == 'true') {
     cb(null, []);
     return;
@@ -207,7 +207,7 @@ exports.setup = function(cb) {
       if (user) {
         cache.put('twitter-user', user);
         db.collection('twitterdb').updateOne({'id': user.id}, user, {upsert: true}, function(err, results) {
-          exports.monthActvity(0, cb);
+          exports.monthActivity(0, cb);
         });
       }
     });

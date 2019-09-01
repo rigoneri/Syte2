@@ -3,7 +3,7 @@ var express = require('express'),
   Lastfm = require('../models/lastfm');
 
 router.get('/', function(req, res) {
-  Lastfm.monthActvity(0, function(error, data) {
+  Lastfm.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

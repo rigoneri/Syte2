@@ -6,7 +6,7 @@ var INSTAGRAM_AUTH_URL = 'https://api.instagram.com/oauth/authorize',
     INSTAGRAM_AUTH_REDIRECT_URL = 'http://localhost:3000/instagram/auth';
 
 router.get('/', function(req, res) {
-  Instagram.monthActvity(0, function(error, data) {
+  Instagram.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }
@@ -61,7 +61,7 @@ router.get('/:page', function(req, res) {
   if (!page)
     page = 0;
 
-  Instagram.monthActvity(page, function(error, data) {
+  Instagram.monthActivity(page, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

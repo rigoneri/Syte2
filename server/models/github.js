@@ -8,7 +8,7 @@ var request = require('request'),
 var GITHUB_API_URL = 'https://api.github.com/';
 var lastUpdated;
 
-exports.monthActvity = function(page, cb) {
+exports.monthActivity = function(page, cb) {
   if (process.env.GITHUB_INTEGRATION_DISABLED == 'true') {
     cb(null, []);
     return;
@@ -181,7 +181,7 @@ exports.setup = function(cb) {
       if (!err) {
         lastUpdated = new Date();
       }
-      exports.monthActvity(0, cb);
+      exports.monthActivity(0, cb);
     });
   });
 };

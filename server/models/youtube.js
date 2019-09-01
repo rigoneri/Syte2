@@ -7,7 +7,7 @@ var request = require('request'),
 var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
 var lastUpdated;
 
-exports.monthActvity = function(page, cb) {
+exports.monthActivity = function(page, cb) {
   if (process.env.YOUTUBE_INTEGRATION_DISABLED == 'true') {
     cb(null, []);
     return;
@@ -193,7 +193,7 @@ exports.setup = function(cb) {
       if (!err) {
         lastUpdated = new Date();
       }
-      exports.monthActvity(0, cb);
+      exports.monthActivity(0, cb);
     });
   });
 };

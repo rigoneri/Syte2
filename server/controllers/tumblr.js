@@ -3,7 +3,7 @@ var express = require('express'),
      Tumblr = require('../models/tumblr');
 
 router.get('/', function(req, res) {
-  Tumblr.monthActvity(0, function(error, data) {
+  Tumblr.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     } else {

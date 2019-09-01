@@ -6,7 +6,7 @@ var DRIBBBLE_AUTH_URL = 'https://dribbble.com/oauth/authorize',
     DRIBBBLE_AUTH_REDIRECT_URL = 'http://localhost:3000/dribbble/auth';
 
 router.get('/', function(req, res) {
-  Dribbble.monthActvity(0, function(error, data) {
+  Dribbble.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

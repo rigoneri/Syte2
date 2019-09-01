@@ -57,28 +57,28 @@ router.get('/:page', function(req, res) {
 
   async.series([
     function(cb) {
-      Twitter.monthActvity(page, cb);
+      Twitter.monthActivity(page, cb);
     },
     function(cb) {
-      Instagram.monthActvity(page, cb);
+      Instagram.monthActivity(page, cb);
     },
     function(cb) {
-      Dribbble.monthActvity(page, cb);
+      Dribbble.monthActivity(page, cb);
     },
     function(cb) {
-      Foursquare.monthActvity(page, cb);
+      Foursquare.monthActivity(page, cb);
     },
     function(cb) {
-      Tumblr.monthActvity(page, cb);
+      Tumblr.monthActivity(page, cb);
     },
     function(cb) {
-      Github.monthActvity(page, cb);
+      Github.monthActivity(page, cb);
     },
     function(cb) {
-      Lastfm.monthActvity(page, cb);
+      Lastfm.monthActivity(page, cb);
     },
     function(cb) {
-      YouTube.monthActvity(page, cb);
+      YouTube.monthActivity(page, cb);
     }
   ], function(err, results) {
     if (!err) {

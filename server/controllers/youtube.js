@@ -7,7 +7,7 @@ var YOUTUBE_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth',
     YOUTUBE_AUTH_REDIRECT_URL = 'http://localhost:3000/youtube/auth';
 
 router.get('/', function(req, res) {
-  YouTube.monthActvity(0, function(error, data) {
+  YouTube.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }

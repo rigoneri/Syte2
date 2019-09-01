@@ -6,7 +6,7 @@ var GITHUB_AUTH_URL = 'https://github.com/login/oauth/authorize',
     GITHUB_AUTH_REDIRECT_URL = 'http://localhost:3000/github/auth';
 
 router.get('/', function(req, res) {
-  Github.monthActvity(0, function(error, data) {
+  Github.monthActivity(0, function(error, data) {
     if (!error) {
       res.status(200).json(data);
     }
