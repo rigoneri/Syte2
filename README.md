@@ -1,6 +1,6 @@
 ### :warning: Unmaintained
 
-Sorry, but this project is no longer maintained. Please checkout the new version [Syte2](https://github.com/rigoneri/Syte2) if interested.
+Sorry, but this project is no longer maintained. Please checkout the new version [Syte3](https://github.com/rigoneri/Syte3) if interested.
 
 --
 
