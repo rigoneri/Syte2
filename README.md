@@ -1,3 +1,9 @@
+### :warning: Unmaintained
+
+Sorry, but this project is no longer maintained. Please checkout the new version [Syte2](https://github.com/rigoneri/Syte2) if interested.
+
+--
+
 # Syte2
 
 Syte2 is the new and refined version of [Syte](http://github.com/rigoneri/syte), a personal website with interactive social integrations. Syte2 integrates with Twitter, Instagram, Foursquare, Github, Dribbble, Spotify/Last.fm, YouTube and Tumblr. You can see it in action on [my personal site](http://rigoneri.com).
